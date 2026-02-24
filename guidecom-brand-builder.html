@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guidecom Brand Builder</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Nunito+Sans:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0B0E14;
+    --surface: #12161F;
+    --surface2: #1A1F2B;
+    --border: rgba(255,255,255,0.07);
+    --text: #E8EAED;
+    --text-dim: #8B919E;
+    --text-muted: #555B69;
+    --heading: #ffffff;
+    --radius: 14px;
+    --radius-btn: 8px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* ===================== HEADER ===================== */
+  .header {
+    padding: 48px 60px 12px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  .header-eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .header h2 {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: var(--heading);
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.65;
+    max-width: 700px;
+  }
+
+  /* ===================== PALETTE TABS ===================== */
+  .palette-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 32px 60px 0;
+    max-width: 1440px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+  .palette-tab {
+    padding: 11px 24px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    transition: all 0.25s ease;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.3px;
+  }
+  .palette-tab:hover { border-color: color-mix(in srgb, var(--text) 25%, transparent); color: var(--text); }
+
+  .palette-tab.active { background: var(--accent, #fff); color: var(--bg, #0B0E14); border-color: var(--accent, #fff); }
+
+  /* ===================== MAIN ===================== */
+  .main {
+    padding: 36px 60px 60px;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  /* ===================== SECTION ===================== */
+  .palette-section { display: none; }
+  .palette-section.active { display: block; animation: fadeUp 0.4s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+  }
+  .section-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--heading);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .section-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  /* ===================== COLOR SWATCHES ===================== */
+  .swatches {
+    display: flex;
+    gap: calc(10px * var(--sp, 1));
+    margin-bottom: calc(40px * var(--sp, 1));
+  }
+  .swatch {
+    flex: 1;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: transform 0.2s;
+  }
+  .swatch:hover { transform: translateY(-2px); }
+  .swatch-color { height: 80px; }
+  .swatch-meta { padding: 12px 14px; }
+  .swatch-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .swatch-hex {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    font-family: 'Sora', monospace;
+  }
+
+  /* ===================== CONTROL STRIP ===================== */
+  .control-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: calc(20px * var(--sp, 1));
+    margin-bottom: calc(36px * var(--sp, 1));
+  }
+  .control-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: calc(20px * var(--sp, 1));
+  }
+  .control-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .control-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .control-btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-btn);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    transition: all 0.2s ease;
+    font-family: 'Outfit', sans-serif;
+    white-space: nowrap;
+  }
+  .control-btn:hover { border-color: color-mix(in srgb, var(--accent, #fff) 25%, transparent); color: var(--text); }
+  .control-btn.active { background: color-mix(in srgb, var(--accent, #fff) 15%, transparent); border-color: color-mix(in srgb, var(--accent, #fff) 40%, transparent); color: var(--accent, #fff); }
+
+  /* ===================== PREVIEW GRID ===================== */
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(20px * var(--sp, 1));
+    margin-bottom: 20px;
+  }
+  .preview-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.2s;
+  }
+  .preview-card:hover { transform: translateY(-2px); }
+  .preview-label {
+    padding: 12px 18px;
+    background: var(--surface);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .preview-body {
+    padding: calc(36px * var(--sp, 1));
+    display: flex;
+    flex-direction: column;
+    gap: calc(18px * var(--sp, 1));
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Logo */
+  .logo-text {
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+  .tagline-text {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; align-items: center; }
+  .pbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: var(--radius-btn);
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    width: fit-content;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+  }
+  .pbtn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 19px;
+    border-radius: var(--radius-btn);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    width: fit-content;
+    font-family: inherit;
+    background: transparent;
+    letter-spacing: 0.2px;
+  }
+
+  /* Stat */
+  .stat-num {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 480px;
+  }
+  .heading-text {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+  }
+
+  /* Social icon */
+  .social-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-icon, 11px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .social-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 14px;
+    min-height: 240px;
+  }
+
+  /* Email button sizing override */
+  .email-btn-wrap .pbtn,
+  .email-btn-wrap .pbtn-outline {
+    font-size: 12px;
+    padding: 8px 18px;
+  }
+
+  /* Full width */
+  .full-width { grid-column: 1 / -1; }
+
+  /* ===================== ARTWORK OVERLAYS ===================== */
+  /* Line art */
+  .art-lines::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.07;
+    background:
+      repeating-linear-gradient(90deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 60px),
+      repeating-linear-gradient(0deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 60px);
+    pointer-events: none;
+  }
+
+  /* Geometric */
+  .art-geo::before {
+    content: '';
+    position: absolute;
+    top: -20%; right: -10%;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    opacity: 0.08;
+    background: radial-gradient(circle, currentColor 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .art-geo::after {
+    content: '';
+    position: absolute;
+    bottom: -30%; left: -5%;
+    width: 200px; height: 200px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  /* Gradient mesh */
+  .art-mesh::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.12;
+    background:
+      radial-gradient(ellipse at 20% 50%, currentColor 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, currentColor 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  /* Dots */
+  .art-dots::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.06;
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+
+  /* Noise grain */
+  .art-grain::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-size: 128px;
+    pointer-events: none;
+  }
+
+  /* ===================== MOTION CLASSES ===================== */
+  .motion-fade .preview-body > * {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .motion-fade.animate .preview-body > * {
+    animation: motionFade 0.6s ease forwards;
+  }
+  .motion-fade.animate .preview-body > *:nth-child(1) { animation-delay: 0s; }
+  .motion-fade.animate .preview-body > *:nth-child(2) { animation-delay: 0.1s; }
+  .motion-fade.animate .preview-body > *:nth-child(3) { animation-delay: 0.2s; }
+  .motion-fade.animate .preview-body > *:nth-child(4) { animation-delay: 0.3s; }
+
+  @keyframes motionFade {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .motion-scale .preview-body > * {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  .motion-scale.animate .preview-body > * {
+    animation: motionScale 0.5s cubic-bezier(0.2, 0, 0.1, 1) forwards;
+  }
+  .motion-scale.animate .preview-body > *:nth-child(1) { animation-delay: 0s; }
+  .motion-scale.animate .preview-body > *:nth-child(2) { animation-delay: 0.08s; }
+  .motion-scale.animate .preview-body > *:nth-child(3) { animation-delay: 0.16s; }
+  .motion-scale.animate .preview-body > *:nth-child(4) { animation-delay: 0.24s; }
+
+  @keyframes motionScale {
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .motion-slide .preview-body > * {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  .motion-slide.animate .preview-body > * {
+    animation: motionSlide 0.5s ease forwards;
+  }
+  .motion-slide.animate .preview-body > *:nth-child(1) { animation-delay: 0s; }
+  .motion-slide.animate .preview-body > *:nth-child(2) { animation-delay: 0.1s; }
+  .motion-slide.animate .preview-body > *:nth-child(3) { animation-delay: 0.18s; }
+  .motion-slide.animate .preview-body > *:nth-child(4) { animation-delay: 0.26s; }
+
+  @keyframes motionSlide {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .motion-none .preview-body > * {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* ===================== TYPOGRAPHY PREVIEW ===================== */
+  .type-showcase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .type-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .type-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .type-sample {
+    color: var(--heading);
+    letter-spacing: -0.3px;
+  }
+
+  /* ===================== SUMMARY BAR ===================== */
+  .summary-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .summary-key {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .summary-val {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heading);
+  }
+
+  /* ===================== SMOOTH TRANSITIONS ===================== */
+  .control-group,
+  .swatch,
+  .type-showcase,
+  .summary-bar,
+  .preview-card,
+  .preview-label {
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 1200px) {
+    .control-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 1000px) {
+    .header, .palette-tabs, .main { padding-left: 24px; padding-right: 24px; }
+    .preview-grid { grid-template-columns: 1fr; }
+    .swatches { flex-wrap: wrap; }
+    .swatch { min-width: calc(33% - 8px); }
+    .header h2 { font-size: 30px; }
+    .full-width { grid-column: 1; }
+    .summary-bar { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+
+  @media (max-width: 600px) {
+    .control-strip { grid-template-columns: 1fr; }
+    .swatch { min-width: calc(50% - 6px); }
+    .palette-tabs { gap: 6px; }
+    .palette-tab { padding: 9px 16px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Guidecom</div>
+  <h2>Brand Builder</h2>
+  <p>Pick a color direction, then mix and match typography, artwork, and motion until it feels right. Everything updates live.</p>
+</div>
+
+<div class="palette-tabs" id="paletteTabs"></div>
+
+<div class="main" id="mainContent"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const palettes = [
+  {
+    id: 'deep-signal',
+    tab: 'A — Deep Signal',
+    name: 'Deep Signal',
+    desc: 'Dark navy + electric teal. Technical confidence with a modern edge.',
+    dark: '#0B1120',
+    surface: '#162032',
+    accent: '#0ED4C5',
+    accentDark: '#0A9E93',
+    secondary: '#3B82F6',
+    lightBg: '#F0F4F8',
+    textOnDark: '#ffffff',
+    textOnDarkDim: 'rgba(255,255,255,0.5)',
+    textOnDarkBody: 'rgba(255,255,255,0.7)',
+    textOnLight: '#0B1120',
+    textOnLightDim: '#6B7B8D',
+    gradient: 'linear-gradient(145deg, #0B1120, #0F1A30)',
+    gradientSocial: 'linear-gradient(160deg, #0B1120, #0E1B33)',
+    isLight: false,
+    pageBg: '#0B1120',
+    pageSurface: '#162032',
+    pageSurface2: '#1C2840',
+    pageBorder: 'rgba(255,255,255,0.08)',
+    pageText: '#E8EAED',
+    pageTextDim: 'rgba(255,255,255,0.5)',
+    pageTextMuted: 'rgba(255,255,255,0.25)',
+    pageHeading: '#ffffff',
+    accentOptions: [
+      { name: 'Teal', value: '#0ED4C5', dark: '#0A9E93' },
+      { name: 'Cyan', value: '#06B6D4', dark: '#0891B2' },
+      { name: 'Mint', value: '#34D399', dark: '#059669' },
+      { name: 'Sky', value: '#38BDF8', dark: '#0284C7' },
+    ],
+    swatches: [
+      { label: 'Primary Dark', color: '#0B1120' },
+      { label: 'Surface', color: '#162032' },
+      { label: 'Accent', color: '#0ED4C5', isAccent: true },
+      { label: 'Secondary', color: '#3B82F6' },
+      { label: 'Light BG', color: '#F0F4F8' },
+      { label: 'White', color: '#FFFFFF', border: true },
+    ]
+  },
+  {
+    id: 'clean-voltage',
+    tab: 'B — Clean Voltage',
+    name: 'Clean Voltage',
+    desc: 'Near-black + vivid blue. Sharp, bold, high contrast.',
+    dark: '#09090F',
+    surface: '#141420',
+    accent: '#4D7CFF',
+    accentDark: '#3A5FCC',
+    secondary: '#A78BFA',
+    lightBg: '#F5F6FA',
+    textOnDark: '#ffffff',
+    textOnDarkDim: 'rgba(255,255,255,0.45)',
+    textOnDarkBody: 'rgba(255,255,255,0.65)',
+    textOnLight: '#09090F',
+    textOnLightDim: '#7A7F8E',
+    gradient: 'linear-gradient(145deg, #09090F, #10102A)',
+    gradientSocial: 'linear-gradient(160deg, #09090F, #12123A)',
+    isLight: false,
+    pageBg: '#09090F',
+    pageSurface: '#141420',
+    pageSurface2: '#1E1E32',
+    pageBorder: 'rgba(255,255,255,0.08)',
+    pageText: '#E8EAED',
+    pageTextDim: 'rgba(255,255,255,0.45)',
+    pageTextMuted: 'rgba(255,255,255,0.22)',
+    pageHeading: '#ffffff',
+    accentOptions: [
+      { name: 'Blue', value: '#4D7CFF', dark: '#3A5FCC' },
+      { name: 'Indigo', value: '#6366F1', dark: '#4F46E5' },
+      { name: 'Violet', value: '#8B5CF6', dark: '#7C3AED' },
+      { name: 'Cobalt', value: '#2563EB', dark: '#1D4ED8' },
+    ],
+    swatches: [
+      { label: 'Primary Dark', color: '#09090F' },
+      { label: 'Surface', color: '#141420' },
+      { label: 'Accent', color: '#4D7CFF', isAccent: true },
+      { label: 'Secondary', color: '#A78BFA' },
+      { label: 'Light BG', color: '#F5F6FA' },
+      { label: 'White', color: '#FFFFFF', border: true },
+    ]
+  },
+  {
+    id: 'warm-circuit',
+    tab: 'C — Warm Circuit',
+    name: 'Warm Circuit',
+    desc: 'Deep charcoal + warm amber. Approachable and confident.',
+    dark: '#0E1117',
+    surface: '#181D26',
+    accent: '#F5A623',
+    accentDark: '#D48B0F',
+    secondary: '#4A9EE5',
+    lightBg: '#F8F6F3',
+    textOnDark: '#ffffff',
+    textOnDarkDim: 'rgba(255,255,255,0.45)',
+    textOnDarkBody: 'rgba(255,255,255,0.65)',
+    textOnLight: '#0E1117',
+    textOnLightDim: '#7A7468',
+    gradient: 'linear-gradient(145deg, #0E1117, #141A22)',
+    gradientSocial: 'linear-gradient(160deg, #0E1117, #161C25)',
+    isLight: false,
+    pageBg: '#0E1117',
+    pageSurface: '#181D26',
+    pageSurface2: '#222833',
+    pageBorder: 'rgba(255,255,255,0.08)',
+    pageText: '#E8EAED',
+    pageTextDim: 'rgba(255,255,255,0.45)',
+    pageTextMuted: 'rgba(255,255,255,0.22)',
+    pageHeading: '#ffffff',
+    accentOptions: [
+      { name: 'Amber', value: '#F5A623', dark: '#D48B0F' },
+      { name: 'Gold', value: '#EAB308', dark: '#CA8A04' },
+      { name: 'Coral', value: '#F97316', dark: '#EA580C' },
+      { name: 'Peach', value: '#FB923C', dark: '#E67E22' },
+    ],
+    swatches: [
+      { label: 'Primary Dark', color: '#0E1117' },
+      { label: 'Surface', color: '#181D26' },
+      { label: 'Accent', color: '#F5A623', isAccent: true },
+      { label: 'Secondary', color: '#4A9EE5' },
+      { label: 'Light BG', color: '#F8F6F3' },
+      { label: 'White', color: '#FFFFFF', border: true },
+    ]
+  },
+  {
+    id: 'open-air',
+    tab: 'D — Open Air',
+    name: 'Open Air',
+    desc: 'Light gradient base + slate navy text + cool steel-blue accent. Airy and trusted.',
+    dark: '#0F1C2E',
+    surface: '#F4F7FA',
+    accent: '#5B9BD5',
+    accentDark: '#3A7BBF',
+    secondary: '#1B2A3D',
+    lightBg: '#DFE6EE',
+    textOnDark: '#ffffff',
+    textOnDarkDim: 'rgba(255,255,255,0.45)',
+    textOnDarkBody: 'rgba(255,255,255,0.65)',
+    textOnLight: '#1B2A3D',
+    textOnLightDim: '#5A6A7D',
+    gradient: 'linear-gradient(145deg, #DFE6EE, #C8D4E0)',
+    gradientSocial: 'linear-gradient(160deg, #DFE6EE, #C5D1DE)',
+    gradientDark: 'linear-gradient(145deg, #0F1C2E, #162842)',
+    isLight: true,
+    pageBg: '#EDF1F5',
+    pageSurface: '#FFFFFF',
+    pageSurface2: '#F4F7FA',
+    pageBorder: 'rgba(27,42,61,0.12)',
+    pageText: '#1B2A3D',
+    pageTextDim: '#5A6A7D',
+    pageTextMuted: '#8A97A8',
+    pageHeading: '#1B2A3D',
+    accentOptions: [
+      { name: 'Steel', value: '#5B9BD5', dark: '#3A7BBF' },
+      { name: 'Slate', value: '#6B8DB5', dark: '#4A6E94' },
+      { name: 'Denim', value: '#4A80C4', dark: '#3668A8' },
+      { name: 'Ice', value: '#7CB3D9', dark: '#5A94BE' },
+    ],
+    swatches: [
+      { label: 'Primary BG', color: '#DFE6EE', gradient: 'linear-gradient(135deg, #DFE6EE, #C8D4E0)' },
+      { label: 'Surface', color: '#F4F7FA' },
+      { label: 'Primary Text', color: '#1B2A3D' },
+      { label: 'Accent', color: '#5B9BD5', isAccent: true },
+      { label: 'Dark Mode', color: '#0F1C2E' },
+      { label: 'White', color: '#FFFFFF', border: true },
+    ]
+  }
+];
+
+const typographyOptions = [
+  { name: 'Sora + Outfit', heading: "'Sora', sans-serif", body: "'Outfit', sans-serif", headingName: 'Sora', bodyName: 'Outfit' },
+  { name: 'Jakarta + Manrope', heading: "'Plus Jakarta Sans', sans-serif", body: "'Manrope', sans-serif", headingName: 'Plus Jakarta Sans', bodyName: 'Manrope' },
+  { name: 'Outfit', heading: "'Outfit', sans-serif", body: "'Outfit', sans-serif", headingName: 'Outfit', bodyName: 'Outfit' },
+  { name: 'Manrope', heading: "'Manrope', sans-serif", body: "'Manrope', sans-serif", headingName: 'Manrope', bodyName: 'Manrope' },
+  { name: 'Space Grotesk + DM Sans', heading: "'Space Grotesk', sans-serif", body: "'DM Sans', sans-serif", headingName: 'Space Grotesk', bodyName: 'DM Sans' },
+];
+
+const artworkOptions = [
+  { name: 'None', cls: '' },
+  { name: 'Line Grid', cls: 'art-lines' },
+  { name: 'Geometric', cls: 'art-geo' },
+  { name: 'Gradient Mesh', cls: 'art-mesh' },
+  { name: 'Dot Pattern', cls: 'art-dots' },
+  { name: 'Grain', cls: 'art-grain' },
+];
+
+const motionOptions = [
+  { name: 'Fade Up', cls: 'motion-fade' },
+  { name: 'Scale In', cls: 'motion-scale' },
+  { name: 'Slide Right', cls: 'motion-slide' },
+  { name: 'None', cls: 'motion-none' },
+];
+
+const radiusOptions = [
+  { name: 'Sharp', card: '0px', btn: '0px', icon: '0px' },
+  { name: 'Subtle', card: '6px', btn: '4px', icon: '6px' },
+  { name: 'Rounded', card: '14px', btn: '8px', icon: '11px' },
+  { name: 'Pill', card: '24px', btn: '100px', icon: '50%' },
+];
+
+const spacingOptions = [
+  { name: 'Compact', multiplier: 0.75 },
+  { name: 'Default', multiplier: 1.0 },
+  { name: 'Spacious', multiplier: 1.3 },
+];
+
+const iconOptions = [
+  { name: 'Outlined', style: 'outlined' },
+  { name: 'Solid', style: 'solid' },
+  { name: 'Duotone', style: 'duotone' },
+];
+
+const buttonOptions = [
+  { name: 'Filled', style: 'filled' },
+  { name: 'Outlined', style: 'outlined' },
+  { name: 'Ghost', style: 'ghost' },
+  { name: 'Gradient', style: 'gradient' },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  palette: 0,
+  accent: 0,
+  type: 0,
+  art: 0,
+  motion: 0,
+  radius: 2,    // default: Rounded
+  spacing: 1,   // default: Default
+  icon: 0,      // default: Outlined
+  button: 0,    // default: Filled
+};
+
+// ============================================================
+// THEME
+// ============================================================
+function applyTheme() {
+  const p = palettes[state.palette];
+  const accentObj = p.accentOptions[state.accent] || p.accentOptions[0];
+  const root = document.documentElement;
+
+  root.style.setProperty('--bg', p.pageBg);
+  root.style.setProperty('--surface', p.pageSurface);
+  root.style.setProperty('--surface2', p.pageSurface2);
+  root.style.setProperty('--border', p.pageBorder);
+  root.style.setProperty('--text', p.pageText);
+  root.style.setProperty('--text-dim', p.pageTextDim);
+  root.style.setProperty('--text-muted', p.pageTextMuted);
+  root.style.setProperty('--heading', p.pageHeading);
+  root.style.setProperty('--accent', accentObj.value);
+  root.style.setProperty('--accent-dark', accentObj.dark);
+
+  const rad = radiusOptions[state.radius];
+  const sp = spacingOptions[state.spacing];
+  root.style.setProperty('--radius', rad.card);
+  root.style.setProperty('--radius-btn', rad.btn);
+  root.style.setProperty('--radius-icon', rad.icon);
+  root.style.setProperty('--sp', sp.multiplier);
+}
+
+// ============================================================
+// BUTTON STYLE RENDERING HELPER
+// ============================================================
+function renderBtn(text, accent, accentDark, darkBg, fontFamily, isPrimary) {
+  const bs = buttonOptions[state.button].style;
+  const rad = radiusOptions[state.radius].btn;
+  let style = `font-family: ${fontFamily}; border-radius: ${rad};`;
+
+  if (isPrimary) {
+    switch (bs) {
+      case 'filled':
+        style += `background: ${accent}; color: ${darkBg}; border: none;`;
+        break;
+      case 'outlined':
+        style += `background: transparent; color: ${accent}; border: 2px solid ${accent};`;
+        break;
+      case 'ghost':
+        style += `background: transparent; color: ${accent}; border: none; text-decoration: underline; text-underline-offset: 3px;`;
+        break;
+      case 'gradient':
+        style += `background: linear-gradient(135deg, ${accent}, ${accentDark}); color: ${darkBg}; border: none;`;
+        break;
+    }
+    return `<div class="pbtn" style="${style}">${text}</div>`;
+  } else {
+    switch (bs) {
+      case 'filled':
+        style += `background: transparent; border: 1.5px solid ${accent}44; color: ${accent};`;
+        break;
+      case 'outlined':
+        style += `background: transparent; border: 1.5px solid ${accent}; color: ${accent};`;
+        break;
+      case 'ghost':
+        style += `background: transparent; border: none; color: ${accent}; opacity: 0.7;`;
+        break;
+      case 'gradient':
+        style += `background: transparent; border: 1.5px solid ${accent}44; color: ${accent};`;
+        break;
+    }
+    return `<div class="pbtn-outline" style="${style}">${text}</div>`;
+  }
+}
+
+// ============================================================
+// ICON STYLE RENDERING HELPER
+// ============================================================
+function renderIcon(size, accent, bgColor, fontFamily) {
+  const iconStyle = iconOptions[state.icon].style;
+  const rad = radiusOptions[state.radius].icon;
+  const s = parseInt(size);
+
+  if (iconStyle === 'outlined') {
+    return `<div style="width: ${s}px; height: ${s}px; border-radius: ${rad}; border: 2px solid ${accent}; display: flex; align-items: center; justify-content: center;">
+      <svg width="${s*0.45}" height="${s*0.45}" viewBox="0 0 24 24" fill="none" stroke="${accent}" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+    </div>`;
+  } else if (iconStyle === 'solid') {
+    return `<div style="width: ${s}px; height: ${s}px; border-radius: ${rad}; background: ${accent}; color: ${bgColor}; display: flex; align-items: center; justify-content: center; font-family: ${fontFamily}; font-size: ${s*0.5}px; font-weight: 800;">G</div>`;
+  } else {
+    return `<div style="width: ${s}px; height: ${s}px; border-radius: ${rad}; background: ${accent}22; display: flex; align-items: center; justify-content: center;">
+      <svg width="${s*0.45}" height="${s*0.45}" viewBox="0 0 24 24" fill="${accent}33" stroke="${accent}" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+    </div>`;
+  }
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function render() {
+  applyTheme();
+  const p = palettes[state.palette];
+  const accentObj = p.accentOptions[state.accent] || p.accentOptions[0];
+  const accent = accentObj.value;
+  const accentD = accentObj.dark;
+  const typ = typographyOptions[state.type];
+  const art = artworkOptions[state.art];
+  const mot = motionOptions[state.motion];
+  const rad = radiusOptions[state.radius];
+  const sp = spacingOptions[state.spacing];
+
+  // Determine colors for preview cards
+  const isL = p.isLight;
+  const heroBg = p.gradient;
+  const heroText = isL ? p.textOnLight : p.textOnDark;
+  const heroTextDim = isL ? p.textOnLightDim : p.textOnDarkDim;
+  const heroTextBody = isL ? p.textOnLightDim : p.textOnDarkBody;
+  const heroAccent = accent;
+
+  // Light card colors
+  const lightBg = isL ? '#FFFFFF' : p.lightBg;
+  const lightText = isL ? p.textOnLight : p.textOnLight;
+  const lightTextDim = isL ? p.textOnLightDim : p.textOnLightDim;
+  const lightAccent = accentD;
+
+  // Dark card (for Open Air, use the dark mode)
+  const darkBg = isL ? (p.gradientDark || p.dark) : p.gradient;
+  const darkBgSolid = p.dark;
+
+  const motCls = mot.cls;
+  const artCls = art.cls;
+
+  // Build swatches — update accent swatch
+  let swatchesHtml = '';
+  p.swatches.forEach(s => {
+    const col = s.isAccent ? accent : s.color;
+    const bg = s.gradient || col;
+    const borderStyle = s.border ? 'border-bottom: 1px solid rgba(255,255,255,0.1);' : '';
+    swatchesHtml += `
+      <div class="swatch">
+        <div class="swatch-color" style="background: ${bg}; ${borderStyle}"></div>
+        <div class="swatch-meta">
+          <div class="swatch-label">${s.label}</div>
+          <div class="swatch-hex">${s.isAccent ? accent : s.color}</div>
+        </div>
+      </div>`;
+  });
+
+  // Controls
+  const accentBtns = p.accentOptions.map((a, i) =>
+    `<button class="control-btn ${state.accent===i?'active':''}" onclick="setAccent(${i})">${a.name}</button>`
+  ).join('');
+
+  const typeBtns = typographyOptions.map((t, i) =>
+    `<button class="control-btn ${state.type===i?'active':''}" onclick="setType(${i})">${t.name}</button>`
+  ).join('');
+
+  const artBtns = artworkOptions.map((a, i) =>
+    `<button class="control-btn ${state.art===i?'active':''}" onclick="setArt(${i})">${a.name}</button>`
+  ).join('');
+
+  const motBtns = motionOptions.map((m, i) =>
+    `<button class="control-btn ${state.motion===i?'active':''}" onclick="setMotion(${i})">${m.name}</button>`
+  ).join('');
+
+  const radiusBtns = radiusOptions.map((r, i) =>
+    `<button class="control-btn ${state.radius===i?'active':''}" onclick="setRadius(${i})">${r.name}</button>`
+  ).join('');
+
+  const spacingBtns = spacingOptions.map((s, i) =>
+    `<button class="control-btn ${state.spacing===i?'active':''}" onclick="setSpacing(${i})">${s.name}</button>`
+  ).join('');
+
+  const iconBtns = iconOptions.map((ic, i) =>
+    `<button class="control-btn ${state.icon===i?'active':''}" onclick="setIcon(${i})">${ic.name}</button>`
+  ).join('');
+
+  const buttonBtns = buttonOptions.map((b, i) =>
+    `<button class="control-btn ${state.button===i?'active':''}" onclick="setButton(${i})">${b.name}</button>`
+  ).join('');
+
+  const html = `
+    <div class="palette-section active">
+      <div class="section-header">
+        <div class="section-name">${p.name}</div>
+        <div class="section-desc">${p.desc}</div>
+      </div>
+
+      <!-- Swatches -->
+      <div class="swatches">${swatchesHtml}</div>
+
+      <!-- Controls: 2-row, 4-column grid -->
+      <div class="control-strip">
+        <div class="control-group">
+          <div class="control-title">Accent Color</div>
+          <div class="control-options">${accentBtns}</div>
+        </div>
+        <div class="control-group">
+          <div class="control-title">Typography</div>
+          <div class="control-options">${typeBtns}</div>
+        </div>
+        <div class="control-group">
+          <div class="control-title">Artwork Style</div>
+          <div class="control-options">${artBtns}</div>
+        </div>
+        <div class="control-group">
+          <div class="control-title">Button Style</div>
+          <div class="control-options">${buttonBtns}</div>
+        </div>
+        <div class="control-group">
+          <div class="control-title">Border Radius</div>
+          <div class="control-options">${radiusBtns}</div>
+        </div>
+        <div class="control-group">
+          <div class="control-title">Spacing</div>
+          <div class="control-options">${spacingBtns}</div>
+        </div>
+        <div class="control-group">
+          <div class="control-title">Icon Style</div>
+          <div class="control-options">${iconBtns}</div>
+        </div>
+        <div class="control-group" style="display: flex; flex-direction: column;">
+          <div class="control-title">Motion</div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <div class="control-options">${motBtns}</div>
+            <button class="control-btn" onclick="replayMotion()" style="border-color: color-mix(in srgb, var(--accent, #fff) 40%, transparent); color: var(--accent, #fff);">↻ Replay</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEWS -->
+      <div class="preview-grid" id="previewGrid">
+
+        <!-- 1. Logo on dark -->
+        <div class="preview-card ${motCls}" id="card-logo-dark">
+          <div class="preview-label">${isL ? 'Logo on Dark' : 'Logo on Dark'}</div>
+          <div class="preview-body ${artCls}" style="background: ${darkBg}; color: ${accent};">
+            <div class="logo-text" style="font-family: ${typ.heading}; color: #fff;">guide<span style="color: ${accent};">com</span></div>
+            <div class="tagline-text" style="color: rgba(255,255,255,0.4); font-family: ${typ.body};">The guided commerce platform.</div>
+            <div class="btn-row">
+              ${renderBtn('Book a Demo →', accent, accentD, darkBgSolid, typ.body, true)}
+              ${renderBtn('Learn More', accent, accentD, darkBgSolid, typ.body, false)}
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Logo on light -->
+        <div class="preview-card ${motCls}" id="card-logo-light">
+          <div class="preview-label">Logo on Light</div>
+          <div class="preview-body ${artCls}" style="background: ${isL ? p.gradient : p.lightBg}; color: ${isL ? accent : accentD};">
+            <div class="logo-text" style="font-family: ${typ.heading}; color: ${lightText};">guide<span style="color: ${lightAccent};">com</span></div>
+            <div class="tagline-text" style="color: ${lightTextDim}; font-family: ${typ.body};">The guided commerce platform.</div>
+            <div class="btn-row">
+              ${renderBtn('Book a Demo →', p.textOnLight, p.textOnLightDim, '#fff', typ.body, true)}
+              ${renderBtn('Learn More', lightText, lightTextDim, lightBg, typ.body, false)}
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Pitch deck stat -->
+        <div class="preview-card ${motCls}" id="card-slide">
+          <div class="preview-label">Pitch Deck Slide</div>
+          <div class="preview-body ${artCls}" style="background: ${heroBg}; color: ${heroAccent};">
+            <div class="stat-num" style="color: ${heroAccent}; font-family: ${typ.heading};">73%</div>
+            <div class="stat-label" style="color: ${heroTextDim};">of system purchases are abandoned due to compatibility confusion</div>
+            <div class="body-text" style="color: ${heroTextBody}; font-family: ${typ.body};">Guidecom eliminates this by guiding customers through every compatible option — from first click to checkout.</div>
+          </div>
+        </div>
+
+        <!-- 4. Social post -->
+        <div class="preview-card ${motCls}" id="card-social">
+          <div class="preview-label">Social Post</div>
+          <div class="preview-body social-center ${artCls}" style="background: ${isL ? p.gradientSocial : p.gradientSocial}; color: ${heroAccent};">
+            ${renderIcon('44', isL ? p.textOnLight : accent, isL ? '#fff' : darkBgSolid, typ.heading)}
+            <div class="heading-text" style="color: ${heroText}; font-family: ${typ.heading};">Stop losing sales to<br/>compatibility confusion.</div>
+            <div style="font-size: 12px; color: ${heroTextDim};">guidecom.io</div>
+          </div>
+        </div>
+
+        <!-- 5. Website section (white) -->
+        <div class="preview-card ${motCls}" id="card-website">
+          <div class="preview-label">Website Section</div>
+          <div class="preview-body ${artCls}" style="background: #FFFFFF; color: ${accentD};">
+            <div class="heading-text" style="color: ${p.isLight ? p.textOnLight : p.textOnLight}; font-family: ${typ.heading};">Built for system-level purchases</div>
+            <div class="body-text" style="color: #5A6A7D; font-family: ${typ.body};">When customers buy multi-component systems, they need more than a product page. Guidecom walks them through every compatible option so they buy right the first time.</div>
+            <div class="btn-row">
+              ${renderBtn('See It In Action →', darkBgSolid, p.dark, '#fff', typ.body, true)}
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Email header -->
+        <div class="preview-card ${motCls}" id="card-email">
+          <div class="preview-label">Email / Outreach Header</div>
+          <div class="preview-body" style="background: ${darkBg}; padding: 32px 36px; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              ${renderIcon('36', accent, darkBgSolid, typ.heading)}
+              <div style="font-family: ${typ.heading}; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px;">guidecom</div>
+            </div>
+            <div style="font-family: ${typ.heading}; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; margin-top: 8px;">Your customers are buying blind.</div>
+            <div class="body-text" style="color: rgba(255,255,255,0.55); font-family: ${typ.body}; font-size: 13px;">We help retailers guide customers through complex system purchases — so they buy right the first time. No wrong parts, no returns, no support tickets.</div>
+            <div class="email-btn-wrap" style="margin-top: 4px;">${renderBtn('See How It Works →', accent, accentD, darkBgSolid, typ.body, true)}</div>
+          </div>
+        </div>
+
+        <!-- 7. Dashboard / Data UI -->
+        <div class="preview-card full-width ${motCls}" id="card-dashboard">
+          <div class="preview-label">Dashboard / Data UI</div>
+          <div class="preview-body" style="background: ${darkBg}; padding: ${Math.round(28 * sp.multiplier)}px; gap: ${Math.round(16 * sp.multiplier)}px;">
+
+            <!-- Nav bar -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: ${Math.round(12 * sp.multiplier)}px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                ${renderIcon('28', accent, darkBgSolid, typ.heading)}
+                <span style="font-family: ${typ.heading}; font-size: 14px; font-weight: 700; color: #fff;">guidecom</span>
+              </div>
+              <div style="display: flex; gap: 16px;">
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.5);">Dashboard</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">Products</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">Analytics</span>
+              </div>
+            </div>
+
+            <!-- KPI row -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: ${Math.round(12 * sp.multiplier)}px;">
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: ${rad.card}; padding: ${Math.round(16 * sp.multiplier)}px;">
+                <div style="font-family: ${typ.body}; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px;">Sessions</div>
+                <div style="font-family: ${typ.heading}; font-size: 28px; font-weight: 800; color: ${accent}; letter-spacing: -1px;">1,247</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: ${rad.card}; padding: ${Math.round(16 * sp.multiplier)}px;">
+                <div style="font-family: ${typ.body}; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px;">Match Rate</div>
+                <div style="font-family: ${typ.heading}; font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px;">89%</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: ${rad.card}; padding: ${Math.round(16 * sp.multiplier)}px;">
+                <div style="font-family: ${typ.body}; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px;">Returns</div>
+                <div style="font-family: ${typ.heading}; font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px;">↓ 12%</div>
+              </div>
+            </div>
+
+            <!-- Mini bar chart -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="font-family: ${typ.body}; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35);">Guided Completions</div>
+              <div style="display: flex; align-items: flex-end; gap: 6px; height: 60px;">
+                <div style="flex: 1; background: ${accent}33; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 40%;"></div>
+                <div style="flex: 1; background: ${accent}55; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 55%;"></div>
+                <div style="flex: 1; background: ${accent}77; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 45%;"></div>
+                <div style="flex: 1; background: ${accent}99; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 70%;"></div>
+                <div style="flex: 1; background: ${accent}bb; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 60%;"></div>
+                <div style="flex: 1; background: ${accent}; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 90%;"></div>
+                <div style="flex: 1; background: ${accent}dd; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 85%;"></div>
+              </div>
+            </div>
+
+            <!-- Table rows hint -->
+            <div style="display: flex; flex-direction: column; gap: 0;">
+              <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 12px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${accent};"></div>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.6); flex: 1;">HVAC Pro System 3000</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">94% match</span>
+              </div>
+              <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 12px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${accent}88;"></div>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.6); flex: 1;">Solar Panel Kit — Residential</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">87% match</span>
+              </div>
+              <div style="display: flex; align-items: center; padding: 10px 0; gap: 12px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${accent}55;"></div>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.6); flex: 1;">Pool Filtration Bundle</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">81% match</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Typography showcase -->
+      <div class="type-showcase">
+        <div class="type-row">
+          <div class="type-label">Headings — ${typ.headingName}</div>
+          <div class="type-sample" style="font-family: ${typ.heading}; font-size: 30px; font-weight: 800;">Guided commerce for complex products</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">Body — ${typ.bodyName}</div>
+          <div class="type-sample" style="font-family: ${typ.body}; font-size: 15px; font-weight: 400; color: var(--text-dim); line-height: 1.7;">Guidecom helps retailers sell multi-component product systems by guiding customers through every compatible option. No wrong parts. No abandoned carts. No returns.</div>
+        </div>
+        <div class="type-row">
+          <div class="type-label">UI / Buttons — ${typ.bodyName}</div>
+          <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+            ${renderBtn('Primary Action', accent, accentD, darkBgSolid, typ.body, true)}
+            ${renderBtn('Secondary', accent, accentD, darkBgSolid, typ.body, false)}
+            <span style="font-family: ${typ.body}; font-size: 13px; color: ${accent}; font-weight: 600; cursor: pointer;">Text Link →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-bar">
+        <div class="summary-item">
+          <div class="summary-key">Direction</div>
+          <div class="summary-val">${p.name}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-key">Accent</div>
+          <div class="summary-val" style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; border-radius: 3px; background: ${accent}; display: inline-block;"></span>${accentObj.name} — ${accent}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-key">Typography</div>
+          <div class="summary-val">${typ.name}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-key">Artwork</div>
+          <div class="summary-val">${art.name}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-key">Motion</div>
+          <div class="summary-val">${mot.name}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-key">Radius</div>
+          <div class="summary-val">${rad.name}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-key">Spacing</div>
+          <div class="summary-val">${sp.name}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-key">Icons</div>
+          <div class="summary-val">${iconOptions[state.icon].name}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-key">Buttons</div>
+          <div class="summary-val">${buttonOptions[state.button].name}</div>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+
+  // Trigger animations
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll(`.${motCls}`).forEach(el => el.classList.add('animate'));
+    });
+  });
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function renderTabs() {
+  const container = document.getElementById('paletteTabs');
+  container.innerHTML = palettes.map((p, i) =>
+    `<button class="palette-tab ${state.palette===i?'active':''}" onclick="setPalette(${i})">${p.tab}</button>`
+  ).join('');
+}
+
+// ============================================================
+// ACTIONS
+// ============================================================
+function setPalette(i) {
+  state.palette = i;
+  state.accent = 0; // reset accent on palette change
+  renderTabs();
+  render();
+}
+
+function setAccent(i) { state.accent = i; render(); }
+function setType(i) { state.type = i; render(); }
+function setArt(i) { state.art = i; render(); }
+function setMotion(i) { state.motion = i; render(); }
+function setRadius(i) { state.radius = i; render(); }
+function setSpacing(i) { state.spacing = i; render(); }
+function setIcon(i) { state.icon = i; render(); }
+function setButton(i) { state.button = i; render(); }
+
+function replayMotion() {
+  const mot = motionOptions[state.motion];
+  if (mot.cls === 'motion-none') return;
+  document.querySelectorAll(`.${mot.cls}`).forEach(el => {
+    el.classList.remove('animate');
+  });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll(`.${mot.cls}`).forEach(el => {
+        el.classList.add('animate');
+      });
+    });
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderTabs();
+render();
+</script>
+
+</body>
+</html>
