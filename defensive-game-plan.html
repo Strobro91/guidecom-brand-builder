@@ -1186,14 +1186,259 @@
     `;
   }
 
-  // ===== Step 2: Opponent Scouting (Placeholder) =====
-  function renderScoutingStep() {
-    return '<div class="step-panel active"><h2 class="step-title">Opponent Scouting</h2><p class="step-subtitle">Scout the opposing team</p></div>';
+  // ===== Step 2: Opponent Scouting =====
+  const TENDENCY_OPTIONS = [
+    'Elite Shooter', 'Weak Ball Handler', 'Post Threat', 'Transition Scorer',
+    'PnR Ball Handler', 'Slasher', 'Spot-Up Shooter', 'Rim Protector',
+    'Poor Free Throw', 'Left Hand Dominant'
+  ];
+
+  const PRIMARY_ACTION_OPTIONS = ['PnR', 'Motion', 'Post-Ups', 'Isolation', 'Transition', 'DHO', 'Horns', 'Flex'];
+
+  function toggleTendency(playerIndex, tendency) {
+    const t = gamePlan.scouting.players[playerIndex].tendencies;
+    const idx = t.indexOf(tendency);
+    if (idx >= 0) t.splice(idx, 1);
+    else t.push(tendency);
+    render();
   }
 
-  // ===== Step 3: Matchup Assignments (Placeholder) =====
+  function toggleAction(action) {
+    const a = gamePlan.scouting.primaryActions;
+    const idx = a.indexOf(action);
+    if (idx >= 0) a.splice(idx, 1);
+    else a.push(action);
+    render();
+  }
+
+  function addCustomTendency(playerIndex) {
+    const input = document.getElementById('custom-tendency-' + playerIndex);
+    if (!input) return;
+    const val = input.value.trim();
+    if (val && !gamePlan.scouting.players[playerIndex].tendencies.includes(val)) {
+      gamePlan.scouting.players[playerIndex].tendencies.push(val);
+      render();
+    }
+  }
+
+  function renderScoutingStep() {
+    const s = gamePlan.scouting;
+
+    // --- Opponent Info Header ---
+    let html = `
+      <div class="step-panel active">
+        <h2 class="step-title">Opponent Scouting</h2>
+        <p class="step-subtitle">Scout the opposing team's players and tendencies.</p>
+
+        <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+          <div class="field-group" style="flex: 1; margin-bottom: 0;">
+            <label class="field-label">Opponent Team Name</label>
+            <input class="input-field" type="text" placeholder="Opponent Team Name" value="${s.opponentName}" oninput="gamePlan.scouting.opponentName = this.value">
+          </div>
+          <div class="field-group" style="flex-shrink: 0; margin-bottom: 0;">
+            <label class="field-label">Game Date</label>
+            <input class="input-field" type="date" value="${s.gameDate}" oninput="gamePlan.scouting.gameDate = this.value">
+          </div>
+        </div>
+
+        <label class="field-label">Opponent Players</label>
+    `;
+
+    // --- Player Entry List ---
+    s.players.forEach((player, i) => {
+      const escaped = (str) => str.replace(/"/g, '&quot;');
+
+      // Tendency chips
+      let tendencyChips = '';
+      TENDENCY_OPTIONS.forEach(t => {
+        const sel = player.tendencies.includes(t) ? ' selected' : '';
+        const tEsc = t.replace(/'/g, "\\'");
+        tendencyChips += `<span class="chip${sel}" onclick="toggleTendency(${i}, '${tEsc}')">${t}</span>`;
+      });
+      // Custom tendencies not in the preset list
+      player.tendencies.forEach(t => {
+        if (!TENDENCY_OPTIONS.includes(t)) {
+          const tEsc = t.replace(/'/g, "\\'");
+          tendencyChips += `<span class="chip selected" onclick="toggleTendency(${i}, '${tEsc}')">${t}</span>`;
+        }
+      });
+
+      html += `
+        <div class="player-row">
+          <div class="player-row-header">
+            <input class="input-field" type="text" placeholder="Player Name" value="${escaped(player.name)}" oninput="gamePlan.scouting.players[${i}].name = this.value">
+            <input class="input-field player-row-number" type="number" placeholder="#" min="1" max="99" value="${player.number}" oninput="gamePlan.scouting.players[${i}].number = this.value">
+            <select class="select-field player-row-position" onchange="gamePlan.scouting.players[${i}].position = this.value">
+              <option value="PG"${player.position === 'PG' ? ' selected' : ''}>PG</option>
+              <option value="SG"${player.position === 'SG' ? ' selected' : ''}>SG</option>
+              <option value="SF"${player.position === 'SF' ? ' selected' : ''}>SF</option>
+              <option value="PF"${player.position === 'PF' ? ' selected' : ''}>PF</option>
+              <option value="C"${player.position === 'C' ? ' selected' : ''}>C</option>
+            </select>
+            <button class="player-row-remove" onclick="gamePlan.scouting.players.splice(${i}, 1); syncMatchups(); render()" title="Remove player">&times;</button>
+          </div>
+          <div class="chip-group">
+            ${tendencyChips}
+            <span class="chip-custom">
+              <input type="text" id="custom-tendency-${i}" placeholder="Custom..." onkeydown="if(event.key==='Enter'){addCustomTendency(${i})}">
+              <span style="cursor:pointer; color: var(--text-dim);" onclick="addCustomTendency(${i})">+</span>
+            </span>
+          </div>
+          <textarea class="textarea-field" placeholder="Scouting notes for this player..." style="min-height: 50px;" oninput="gamePlan.scouting.players[${i}].notes = this.value">${player.notes}</textarea>
+        </div>
+      `;
+    });
+
+    // Add Player button (max 10)
+    if (s.players.length < 10) {
+      html += `
+        <button class="player-add-btn" onclick="gamePlan.scouting.players.push({ name: '', number: '', position: 'PG', tendencies: [], notes: '' }); syncMatchups(); render()">
+          + Add Player
+        </button>
+      `;
+    }
+
+    // --- Team Tendencies Section ---
+    const paceFast = s.pace === 'Fast' ? ' selected' : '';
+    const paceModerate = s.pace === 'Moderate' ? ' selected' : '';
+    const paceSlow = s.pace === 'Slow' ? ' selected' : '';
+
+    let actionChips = '';
+    PRIMARY_ACTION_OPTIONS.forEach(a => {
+      const sel = s.primaryActions.includes(a) ? ' selected' : '';
+      const aEsc = a.replace(/'/g, "\\'");
+      actionChips += `<span class="chip${sel}" onclick="toggleAction('${aEsc}')">${a}</span>`;
+    });
+
+    html += `
+        <hr class="section-divider">
+
+        <label class="field-label">Pace</label>
+        <div class="card-selector" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="card${paceFast}" onclick="gamePlan.scouting.pace = 'Fast'; render()">
+            <div class="card-title">Fast</div>
+          </div>
+          <div class="card${paceModerate}" onclick="gamePlan.scouting.pace = 'Moderate'; render()">
+            <div class="card-title">Moderate</div>
+          </div>
+          <div class="card${paceSlow}" onclick="gamePlan.scouting.pace = 'Slow'; render()">
+            <div class="card-title">Slow</div>
+          </div>
+        </div>
+
+        <div class="field-group" style="margin-top: 24px;">
+          <label class="field-label">Primary Actions</label>
+          <div class="chip-group">
+            ${actionChips}
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Strengths</label>
+          <textarea class="textarea-field" placeholder="What does this team do well?" oninput="gamePlan.scouting.strengths = this.value">${s.strengths}</textarea>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Weaknesses</label>
+          <textarea class="textarea-field" placeholder="Where are they vulnerable?" oninput="gamePlan.scouting.weaknesses = this.value">${s.weaknesses}</textarea>
+        </div>
+      </div>
+    `;
+
+    return html;
+  }
+
+  // ===== Step 3: Matchup Assignments =====
+  function syncMatchups() {
+    const players = gamePlan.scouting.players;
+    const existing = gamePlan.matchups;
+
+    // Build a new matchups array that stays in sync with scouting players
+    const synced = players.map((player, i) => {
+      // Find existing matchup for this index (preserve data)
+      const found = existing[i];
+      if (found && found.opponentIndex === i) {
+        return found;
+      }
+      // Check if there's an existing entry we can reuse by index
+      if (existing[i]) {
+        return { opponentIndex: i, defender: existing[i].defender || '', instruction: existing[i].instruction || '', isPrimaryThreat: existing[i].isPrimaryThreat || false };
+      }
+      return { opponentIndex: i, defender: '', instruction: '', isPrimaryThreat: false };
+    });
+
+    gamePlan.matchups = synced;
+  }
+
   function renderMatchupsStep() {
-    return '<div class="step-panel active"><h2 class="step-title">Matchup Assignments</h2><p class="step-subtitle">Assign defensive matchups</p></div>';
+    const players = gamePlan.scouting.players;
+
+    // Empty state
+    if (players.length === 0) {
+      return `
+        <div class="step-panel active">
+          <h2 class="step-title">Matchup Assignments</h2>
+          <p class="step-subtitle">Assign a defender and instructions for each opponent player.</p>
+          <div style="text-align: center; padding: 48px 0;">
+            <p style="color: var(--text-dim); font-size: 15px; margin-bottom: 16px;">Add opponent players in Step 2 first</p>
+            <button class="btn-next" onclick="goToStep(1)">Go to Scouting</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Sync matchups with current players
+    syncMatchups();
+
+    let html = `
+      <div class="step-panel active">
+        <h2 class="step-title">Matchup Assignments</h2>
+        <p class="step-subtitle">Assign a defender and instructions for each opponent player.</p>
+    `;
+
+    players.forEach((player, i) => {
+      const m = gamePlan.matchups[i];
+      const escaped = (str) => (str || '').replace(/"/g, '&quot;');
+
+      // Read-only tendency chips
+      let tendencyDisplay = '';
+      if (player.tendencies.length > 0) {
+        tendencyDisplay = '<div class="chip-group" style="margin-top: 6px;">';
+        player.tendencies.forEach(t => {
+          tendencyDisplay += `<span class="chip" style="cursor: default; font-size: 11px; padding: 4px 10px;">${t}</span>`;
+        });
+        tendencyDisplay += '</div>';
+      }
+
+      const threatBadge = m.isPrimaryThreat ? '<span class="threat-badge">Primary Threat</span>' : '';
+      const threatBtnClass = m.isPrimaryThreat ? 'btn-danger' : 'btn-ghost';
+      const threatBtnLabel = m.isPrimaryThreat ? 'Primary Threat' : 'Mark as Threat';
+
+      html += `
+        <div class="matchup-row" style="flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 15px; font-weight: 600; color: var(--heading);">${player.name || 'Unnamed Player'}</span>
+              ${player.number ? '<span style="font-size: 13px; color: var(--text-muted);">#' + player.number + '</span>' : ''}
+              <span style="font-size: 12px; color: var(--text-muted); background: var(--surface2); padding: 2px 8px; border-radius: 4px;">${player.position}</span>
+              ${threatBadge}
+            </div>
+            ${tendencyDisplay}
+          </div>
+          <span class="matchup-vs">VS</span>
+          <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 8px;">
+            <input class="input-field" type="text" placeholder="DU Defender" value="${escaped(m.defender)}" oninput="gamePlan.matchups[${i}].defender = this.value">
+            <input class="input-field" type="text" placeholder="e.g. force left, deny catch" value="${escaped(m.instruction)}" oninput="gamePlan.matchups[${i}].instruction = this.value">
+            <button class="${threatBtnClass}" style="align-self: flex-start; font-size: 12px; padding: 6px 14px;" onclick="gamePlan.matchups[${i}].isPrimaryThreat = !gamePlan.matchups[${i}].isPrimaryThreat; render()">
+              ${threatBtnLabel}
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += '</div>';
+    return html;
   }
 
   // ===== Step 4: Situations (Placeholder) =====
