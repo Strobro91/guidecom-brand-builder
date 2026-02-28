@@ -961,6 +961,253 @@
 <body>
   <div id="app"></div>
   <script>
+  // ===== Constants =====
+  const STEPS = ['identity', 'scouting', 'matchups', 'situations', 'summary'];
+  const STEP_LABELS = ['Defensive Identity', 'Opponent Scouting', 'Matchup Assignments', 'Situations', 'Game Plan Summary'];
+
+  // ===== State =====
+  let currentStep = 0;
+  let visitedSteps = new Set([0]);
+
+  let gamePlan = {
+    identity: {
+      baseDefense: '',
+      secondaryDefense: '',
+      transitionStyle: '',
+      playersBack: 3,
+      reboundingPhilosophy: '',
+      boxOutNotes: ''
+    },
+    scouting: {
+      opponentName: '',
+      gameDate: '',
+      players: [],
+      pace: '',
+      primaryActions: [],
+      strengths: '',
+      weaknesses: ''
+    },
+    matchups: [],
+    situations: {
+      lateClock: '',
+      atoPlays: '',
+      foulRules: '',
+      endOfPeriod: '',
+      pressBreak: ''
+    }
+  };
+
+  // ===== Navigation =====
+  function goToStep(index) {
+    if (index < 0 || index >= STEPS.length) return;
+    currentStep = index;
+    visitedSteps.add(index);
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ===== Render Engine =====
+  function render() {
+    const app = document.getElementById('app');
+    app.innerHTML = renderHeader() + renderProgressBar() + '<div class="wizard-container">' + renderStep(currentStep) + renderNavButtons() + '</div>';
+  }
+
+  // ===== Header =====
+  function renderHeader() {
+    return `
+      <div class="header">
+        <div class="header-title"><span>DU</span> DEFENSIVE GAME PLAN</div>
+        <div class="header-actions">
+          <button class="btn-ghost" onclick="openLoadModal()">Load Plan</button>
+          <button class="btn-ghost" onclick="newGamePlan()">New Plan</button>
+        </div>
+      </div>
+    `;
+  }
+
+  // Stubs for later (Task 8)
+  function openLoadModal() {
+    // Will be implemented in Task 8
+  }
+
+  function newGamePlan() {
+    // Will be implemented in Task 8
+  }
+
+  // ===== Progress Bar =====
+  function renderProgressBar() {
+    let html = '<div class="progress-bar">';
+    for (let i = 0; i < STEPS.length; i++) {
+      const isActive = i === currentStep;
+      const isVisited = visitedSteps.has(i) && !isActive;
+      let classes = 'progress-step';
+      if (isActive) classes += ' active';
+      else if (isVisited) classes += ' visited';
+
+      const clickHandler = visitedSteps.has(i) ? `onclick="goToStep(${i})"` : '';
+
+      html += `
+        <div class="${classes}" ${clickHandler}>
+          <span class="progress-step-circle">${i + 1}</span>
+          <span class="progress-step-label">${STEP_LABELS[i]}</span>
+        </div>
+      `;
+
+      if (i < STEPS.length - 1) {
+        const lineVisited = visitedSteps.has(i + 1) ? ' visited' : '';
+        html += `<div class="progress-line${lineVisited}"></div>`;
+      }
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // ===== Nav Buttons =====
+  function renderNavButtons() {
+    const backHidden = currentStep === 0 ? 'style="visibility: hidden;"' : '';
+    const isLastStep = currentStep === STEPS.length - 1;
+    const isSituations = currentStep === 3;
+    const nextLabel = isSituations ? 'View Summary' : 'Next';
+
+    let nextBtn = '';
+    if (!isLastStep) {
+      nextBtn = `<button class="btn-next" onclick="goToStep(currentStep + 1)">${nextLabel}</button>`;
+    }
+
+    return `
+      <div class="nav-buttons">
+        <button class="btn-back" ${backHidden} onclick="goToStep(currentStep - 1)">Back</button>
+        <div class="nav-buttons-right">
+          ${nextBtn}
+        </div>
+      </div>
+    `;
+  }
+
+  // ===== Step Router =====
+  function renderStep(index) {
+    switch (index) {
+      case 0: return renderIdentityStep();
+      case 1: return renderScoutingStep();
+      case 2: return renderMatchupsStep();
+      case 3: return renderSituationsStep();
+      case 4: return renderSummaryStep();
+      default: return '';
+    }
+  }
+
+  // ===== Step 1: Defensive Identity =====
+  function renderIdentityStep() {
+    const baseDefenses = ['Man-to-Man', '2-3 Zone', '3-2 Zone', '1-3-1 Zone', 'Matchup Zone', '1-2-2 Press', 'Full Court Man Press'];
+
+    // Base Defense Cards
+    let baseCards = '';
+    baseDefenses.forEach(def => {
+      const selected = gamePlan.identity.baseDefense === def ? ' selected' : '';
+      const escaped = def.replace(/'/g, "\\'");
+      baseCards += `
+        <div class="card${selected}" onclick="gamePlan.identity.baseDefense = '${escaped}'; render()">
+          <div class="card-title">${def}</div>
+        </div>
+      `;
+    });
+
+    // Secondary Defense Chips
+    let secondaryChips = '';
+    baseDefenses.forEach(def => {
+      const selected = gamePlan.identity.secondaryDefense === def ? ' selected' : '';
+      const escaped = def.replace(/'/g, "\\'");
+      secondaryChips += `
+        <span class="chip${selected}" onclick="gamePlan.identity.secondaryDefense = gamePlan.identity.secondaryDefense === '${escaped}' ? '' : '${escaped}'; render()">${def}</span>
+      `;
+    });
+
+    // Transition Defense Cards
+    const transGetBack = gamePlan.identity.transitionStyle === 'Get Back' ? ' selected' : '';
+    const transScramble = gamePlan.identity.transitionStyle === 'Scramble' ? ' selected' : '';
+
+    // Rebounding Philosophy Cards
+    const rebCrash = gamePlan.identity.reboundingPhilosophy === 'Crash the Boards' ? ' selected' : '';
+    const rebGetBack = gamePlan.identity.reboundingPhilosophy === 'Get Back' ? ' selected' : '';
+
+    return `
+      <div class="step-panel active">
+        <h2 class="step-title">Defensive Identity</h2>
+        <p class="step-subtitle">Set your team's core defensive philosophy and approach.</p>
+
+        <label class="field-label">Base Defense</label>
+        <div class="card-selector">
+          ${baseCards}
+        </div>
+
+        <hr class="section-divider">
+
+        <label class="field-label">Change-Up Defense (Optional)</label>
+        <div class="chip-group">
+          ${secondaryChips}
+        </div>
+
+        <hr class="section-divider">
+
+        <label class="field-label">Transition Defense</label>
+        <div class="card-selector">
+          <div class="card${transGetBack}" onclick="gamePlan.identity.transitionStyle = 'Get Back'; render()">
+            <div class="card-title">Get Back</div>
+            <div class="card-desc">Prioritize getting back in half-court defense</div>
+          </div>
+          <div class="card${transScramble}" onclick="gamePlan.identity.transitionStyle = 'Scramble'; render()">
+            <div class="card-title">Scramble</div>
+            <div class="card-desc">Aggressive — gamble for steals in transition</div>
+          </div>
+        </div>
+        <div class="field-group" style="margin-top: 16px;">
+          <label class="field-label">Players back on shot:</label>
+          <input class="input-field" type="number" min="1" max="5" value="${gamePlan.identity.playersBack}" oninput="gamePlan.identity.playersBack = parseInt(this.value) || 3" style="width: 100px;">
+        </div>
+
+        <hr class="section-divider">
+
+        <label class="field-label">Rebounding Philosophy</label>
+        <div class="card-selector">
+          <div class="card${rebCrash}" onclick="gamePlan.identity.reboundingPhilosophy = 'Crash the Boards'; render()">
+            <div class="card-title">Crash the Boards</div>
+            <div class="card-desc">Send 3-4 players to offensive rebound</div>
+          </div>
+          <div class="card${rebGetBack}" onclick="gamePlan.identity.reboundingPhilosophy = 'Get Back'; render()">
+            <div class="card-title">Get Back</div>
+            <div class="card-desc">1-2 rebounders, prioritize transition defense</div>
+          </div>
+        </div>
+        <div class="field-group" style="margin-top: 16px;">
+          <label class="field-label">Box-out assignment notes</label>
+          <textarea class="textarea-field" placeholder="e.g. PG takes free-throw shooter, C boxes out their C..." oninput="gamePlan.identity.boxOutNotes = this.value">${gamePlan.identity.boxOutNotes}</textarea>
+        </div>
+      </div>
+    `;
+  }
+
+  // ===== Step 2: Opponent Scouting (Placeholder) =====
+  function renderScoutingStep() {
+    return '<div class="step-panel active"><h2 class="step-title">Opponent Scouting</h2><p class="step-subtitle">Scout the opposing team</p></div>';
+  }
+
+  // ===== Step 3: Matchup Assignments (Placeholder) =====
+  function renderMatchupsStep() {
+    return '<div class="step-panel active"><h2 class="step-title">Matchup Assignments</h2><p class="step-subtitle">Assign defensive matchups</p></div>';
+  }
+
+  // ===== Step 4: Situations (Placeholder) =====
+  function renderSituationsStep() {
+    return '<div class="step-panel active"><h2 class="step-title">Situations</h2><p class="step-subtitle">Plan for special game situations</p></div>';
+  }
+
+  // ===== Step 5: Summary (Placeholder) =====
+  function renderSummaryStep() {
+    return '<div class="step-panel active"><h2 class="step-title">Game Plan Summary</h2><p class="step-subtitle">Review your complete defensive game plan</p></div>';
+  }
+
+  // ===== Initialize =====
+  render();
   </script>
 </body>
 </html>
