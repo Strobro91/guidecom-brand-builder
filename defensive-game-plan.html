@@ -1025,13 +1025,143 @@
     `;
   }
 
-  // Stubs for later (Task 8)
-  function openLoadModal() {
-    // Will be implemented in Task 8
+  // ===== Save / Load System =====
+  function saveGamePlan() {
+    const name = gamePlan.scouting.opponentName || 'Untitled';
+    const date = gamePlan.scouting.gameDate || new Date().toISOString().split('T')[0];
+    const key = 'du-game-plan-' + name.replace(/\s+/g, '-').toLowerCase() + '-' + date;
+
+    localStorage.setItem(key, JSON.stringify(gamePlan));
+    showToast('Game plan saved!');
+  }
+
+  function showToast(message) {
+    let toast = document.querySelector('.toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  function getSavedPlans() {
+    const plans = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith('du-game-plan-')) {
+        try {
+          const data = JSON.parse(localStorage.getItem(key));
+          plans.push({
+            key: key,
+            name: data.scouting.opponentName || 'Untitled',
+            date: data.scouting.gameDate || 'No date'
+          });
+        } catch(e) {}
+      }
+    }
+    return plans.sort((a, b) => b.date.localeCompare(a.date));
+  }
+
+  function loadGamePlan(key) {
+    const data = localStorage.getItem(key);
+    if (data) {
+      gamePlan = JSON.parse(data);
+      currentStep = 0;
+      visitedSteps = new Set([0, 1, 2, 3, 4]);
+      closeLoadModal();
+      render();
+      showToast('Game plan loaded!');
+    }
+  }
+
+  function deleteSavedPlan(key) {
+    if (confirm('Delete this saved game plan?')) {
+      localStorage.removeItem(key);
+      // Refresh modal content
+      closeLoadModal();
+      openLoadModal();
+      showToast('Plan deleted');
+    }
   }
 
   function newGamePlan() {
-    // Will be implemented in Task 8
+    if (confirm('Start a new game plan? Unsaved changes will be lost.')) {
+      gamePlan = {
+        identity: { baseDefense: '', secondaryDefense: '', transitionStyle: '', playersBack: 3, reboundingPhilosophy: '', boxOutNotes: '' },
+        scouting: { opponentName: '', gameDate: '', players: [], pace: '', primaryActions: [], strengths: '', weaknesses: '' },
+        matchups: [],
+        situations: { lateClock: '', atoPlays: '', foulRules: '', endOfPeriod: '', pressBreak: '' }
+      };
+      currentStep = 0;
+      visitedSteps = new Set([0]);
+      render();
+      showToast('New game plan started');
+    }
+  }
+
+  function openLoadModal() {
+    // Remove any existing modal
+    closeLoadModal();
+
+    const plans = getSavedPlans();
+
+    let planRows = '';
+    if (plans.length === 0) {
+      planRows = '<p style="color: var(--text-muted); font-style: italic; text-align: center; padding: 20px 0;">No saved game plans yet</p>';
+    } else {
+      plans.forEach(plan => {
+        const escaped = plan.key.replace(/'/g, "\\'");
+        planRows += `
+          <div class="load-modal-item">
+            <div>
+              <div class="load-modal-item-name">${plan.name}</div>
+              <div class="load-modal-item-date">${plan.date}</div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-ghost" style="font-size: 12px; padding: 6px 14px;" onclick="loadGamePlan('${escaped}')">Load</button>
+              <button class="btn-danger" style="font-size: 12px; padding: 6px 14px;" onclick="event.stopPropagation(); deleteSavedPlan('${escaped}')">Delete</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'load-modal-backdrop';
+    backdrop.id = 'load-modal-backdrop';
+    backdrop.onclick = closeLoadModal;
+
+    const modal = document.createElement('div');
+    modal.className = 'load-modal';
+    modal.id = 'load-modal';
+    modal.onclick = (e) => e.stopPropagation();
+    modal.innerHTML = `
+      <div class="load-modal-title">Load Game Plan</div>
+      <div class="load-modal-desc">Select a previously saved game plan to load.</div>
+      ${planRows}
+      <div class="load-modal-actions">
+        <button class="btn-ghost" onclick="closeLoadModal()">Close</button>
+      </div>
+    `;
+
+    document.body.appendChild(backdrop);
+    document.body.appendChild(modal);
+
+    // Trigger transition after append
+    requestAnimationFrame(() => {
+      backdrop.classList.add('show');
+      modal.classList.add('show');
+    });
+  }
+
+  function closeLoadModal() {
+    const backdrop = document.getElementById('load-modal-backdrop');
+    const modal = document.getElementById('load-modal');
+    if (backdrop) backdrop.remove();
+    if (modal) modal.remove();
   }
 
   // ===== Progress Bar =====
@@ -1441,14 +1571,222 @@
     return html;
   }
 
-  // ===== Step 4: Situations (Placeholder) =====
+  // ===== Step 4: Situation Adjustments =====
   function renderSituationsStep() {
-    return '<div class="step-panel active"><h2 class="step-title">Situations</h2><p class="step-subtitle">Plan for special game situations</p></div>';
+    const sit = gamePlan.situations;
+    return `
+      <div class="step-panel active">
+        <h2 class="step-title">Situation Adjustments</h2>
+        <p class="step-subtitle">Define how your team responds in key game situations.</p>
+
+        <div class="situation-block">
+          <div class="situation-label">What do we do when the shot clock is under 8 seconds?</div>
+          <textarea class="textarea-field" placeholder="e.g. Switch everything, no help, contest all shots..." oninput="gamePlan.situations.lateClock = this.value">${sit.lateClock}</textarea>
+        </div>
+
+        <div class="situation-block">
+          <div class="situation-label">How do we defend their after-timeout and out-of-bounds plays?</div>
+          <textarea class="textarea-field" placeholder="e.g. Switch on all screens, deny inbound to #23..." oninput="gamePlan.situations.atoPlays = this.value">${sit.atoPlays}</textarea>
+        </div>
+
+        <div class="situation-block">
+          <div class="situation-label">When do we foul? When do we avoid fouls?</div>
+          <textarea class="textarea-field" placeholder="e.g. No fouls on 3pt shooters, foul on drives under 2 min..." oninput="gamePlan.situations.foulRules = this.value">${sit.foulRules}</textarea>
+        </div>
+
+        <div class="situation-block">
+          <div class="situation-label">Defensive approach in final 2 minutes of each half?</div>
+          <textarea class="textarea-field" placeholder="e.g. Full court press if down, protect paint if ahead..." oninput="gamePlan.situations.endOfPeriod = this.value">${sit.endOfPeriod}</textarea>
+        </div>
+
+        <div class="situation-block">
+          <div class="situation-label">When do we press? When do we pull back?</div>
+          <textarea class="textarea-field" placeholder="e.g. Press after made baskets in 2nd half, pull back if they break it twice..." oninput="gamePlan.situations.pressBreak = this.value">${sit.pressBreak}</textarea>
+        </div>
+      </div>
+    `;
   }
 
-  // ===== Step 5: Summary (Placeholder) =====
+  // ===== Step 5: Game Plan Summary =====
+  function toggleAccordion(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('open');
+  }
+
   function renderSummaryStep() {
-    return '<div class="step-panel active"><h2 class="step-title">Game Plan Summary</h2><p class="step-subtitle">Review your complete defensive game plan</p></div>';
+    const id = gamePlan.identity;
+    const sc = gamePlan.scouting;
+    const matchups = gamePlan.matchups;
+    const sit = gamePlan.situations;
+    const muted = (text) => `<span style="color: var(--text-muted); font-style: italic;">${text}</span>`;
+
+    // --- Accordion 1: Defensive Identity ---
+    let identityContent = '';
+    identityContent += `<div class="summary-item"><span class="summary-item-label">Base Defense</span><span class="summary-item-value">${id.baseDefense || muted('Not set')}</span></div>`;
+    if (id.secondaryDefense) {
+      identityContent += `<div class="summary-item"><span class="summary-item-label">Change-Up Defense</span><span class="summary-item-value">${id.secondaryDefense}</span></div>`;
+    }
+    identityContent += `<div class="summary-item"><span class="summary-item-label">Transition Style</span><span class="summary-item-value">${id.transitionStyle || muted('Not set')}</span></div>`;
+    identityContent += `<div class="summary-item"><span class="summary-item-label">Players Back on Shot</span><span class="summary-item-value">${id.playersBack}</span></div>`;
+    identityContent += `<div class="summary-item"><span class="summary-item-label">Rebounding</span><span class="summary-item-value">${id.reboundingPhilosophy || muted('Not set')}</span></div>`;
+    if (id.boxOutNotes) {
+      identityContent += `<div class="summary-item"><span class="summary-item-label">Box-Out Notes</span><span class="summary-item-value" style="max-width: 60%; text-align: right;">${id.boxOutNotes}</span></div>`;
+    }
+
+    // --- Accordion 2: Opponent Overview ---
+    let opponentContent = '';
+    opponentContent += `<div class="summary-item"><span class="summary-item-label">Opponent</span><span class="summary-item-value">${sc.opponentName || muted('Not set')}</span></div>`;
+    opponentContent += `<div class="summary-item"><span class="summary-item-label">Game Date</span><span class="summary-item-value">${sc.gameDate || muted('Not set')}</span></div>`;
+    opponentContent += `<div class="summary-item"><span class="summary-item-label">Pace</span><span class="summary-item-value">${sc.pace || muted('Not set')}</span></div>`;
+    if (sc.primaryActions.length > 0) {
+      let actionChips = '<div class="chip-group" style="justify-content: flex-end;">';
+      sc.primaryActions.forEach(a => {
+        actionChips += `<span class="chip selected" style="cursor: default; font-size: 11px; padding: 4px 10px;">${a}</span>`;
+      });
+      actionChips += '</div>';
+      opponentContent += `<div class="summary-item"><span class="summary-item-label">Primary Actions</span><span class="summary-item-value">${actionChips}</span></div>`;
+    }
+    if (sc.strengths) {
+      opponentContent += `<div class="summary-item"><span class="summary-item-label">Strengths</span><span class="summary-item-value" style="max-width: 60%; text-align: right;">${sc.strengths}</span></div>`;
+    }
+    if (sc.weaknesses) {
+      opponentContent += `<div class="summary-item"><span class="summary-item-label">Weaknesses</span><span class="summary-item-value" style="max-width: 60%; text-align: right;">${sc.weaknesses}</span></div>`;
+    }
+
+    // --- Accordion 3: Opponent Players ---
+    let playersContent = '';
+    if (sc.players.length === 0) {
+      playersContent = `<p style="color: var(--text-muted); font-style: italic;">No players added</p>`;
+    } else {
+      playersContent += `<p style="color: var(--text-dim); font-size: 13px; margin-bottom: 12px;">${sc.players.length} player${sc.players.length !== 1 ? 's' : ''} scouted</p>`;
+      sc.players.forEach(player => {
+        let tendencyChips = '';
+        if (player.tendencies.length > 0) {
+          tendencyChips = '<div class="chip-group" style="margin-top: 6px;">';
+          player.tendencies.forEach(t => {
+            tendencyChips += `<span class="chip" style="cursor: default; font-size: 11px; padding: 4px 10px;">${t}</span>`;
+          });
+          tendencyChips += '</div>';
+        }
+        playersContent += `
+          <div style="padding: 10px 0; border-bottom: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 600; color: var(--heading);">${player.name || 'Unnamed'}</span>
+              ${player.number ? '<span style="font-size: 13px; color: var(--text-muted);">#' + player.number + '</span>' : ''}
+              <span style="font-size: 12px; color: var(--text-muted); background: var(--surface2); padding: 2px 8px; border-radius: 4px;">${player.position}</span>
+            </div>
+            ${tendencyChips}
+            ${player.notes ? '<p style="font-size: 13px; color: var(--text-dim); margin-top: 6px;">' + player.notes + '</p>' : ''}
+          </div>
+        `;
+      });
+    }
+
+    // --- Accordion 4: Matchup Assignments ---
+    let matchupsContent = '';
+    if (matchups.length === 0 || sc.players.length === 0) {
+      matchupsContent = `<p style="color: var(--text-muted); font-style: italic;">No matchups assigned</p>`;
+    } else {
+      matchups.forEach((m, i) => {
+        const player = sc.players[i];
+        if (!player) return;
+        const threatBadge = m.isPrimaryThreat ? ' <span class="threat-badge">Primary Threat</span>' : '';
+        matchupsContent += `
+          <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <span style="font-weight: 600; color: var(--heading);">${player.name || 'Unnamed'}</span>
+            ${threatBadge}
+            <span style="color: var(--text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">vs</span>
+            <span style="font-weight: 600; color: var(--gold);">${m.defender || muted('Unassigned')}</span>
+            ${m.instruction ? '<span style="font-size: 13px; color: var(--text-dim); margin-left: auto;">' + m.instruction + '</span>' : ''}
+          </div>
+        `;
+      });
+    }
+
+    // --- Accordion 5: Situation Rules ---
+    const situationEntries = [
+      { key: 'lateClock', label: 'Late Shot Clock Defense' },
+      { key: 'atoPlays', label: 'ATO / BLOB / SLOB' },
+      { key: 'foulRules', label: 'Foul Situation Rules' },
+      { key: 'endOfPeriod', label: 'End of Half / End of Game' },
+      { key: 'pressBreak', label: 'Press Moments' }
+    ];
+    let situationsContent = '';
+    situationEntries.forEach(entry => {
+      const value = sit[entry.key];
+      situationsContent += `
+        <div class="summary-item">
+          <span class="summary-item-label">${entry.label}</span>
+          <span class="summary-item-value" style="max-width: 60%; text-align: right;">${value || muted('Not set')}</span>
+        </div>
+      `;
+    });
+
+    return `
+      <div class="step-panel active">
+        <h2 class="step-title">Game Plan Summary</h2>
+        <p class="step-subtitle">Review your complete defensive game plan before saving.</p>
+
+        <div class="accordion open" id="acc-identity">
+          <div class="accordion-header" onclick="toggleAccordion('acc-identity')">
+            <span class="accordion-title">Defensive Identity</span>
+            <div>
+              <button class="btn-ghost" onclick="event.stopPropagation(); goToStep(0)" style="margin-right:8px;font-size:13px">Edit</button>
+              <span class="accordion-chevron">&#9662;</span>
+            </div>
+          </div>
+          <div class="accordion-content">${identityContent}</div>
+        </div>
+
+        <div class="accordion open" id="acc-opponent">
+          <div class="accordion-header" onclick="toggleAccordion('acc-opponent')">
+            <span class="accordion-title">Opponent Overview</span>
+            <div>
+              <button class="btn-ghost" onclick="event.stopPropagation(); goToStep(1)" style="margin-right:8px;font-size:13px">Edit</button>
+              <span class="accordion-chevron">&#9662;</span>
+            </div>
+          </div>
+          <div class="accordion-content">${opponentContent}</div>
+        </div>
+
+        <div class="accordion open" id="acc-players">
+          <div class="accordion-header" onclick="toggleAccordion('acc-players')">
+            <span class="accordion-title">Opponent Players</span>
+            <div>
+              <button class="btn-ghost" onclick="event.stopPropagation(); goToStep(1)" style="margin-right:8px;font-size:13px">Edit</button>
+              <span class="accordion-chevron">&#9662;</span>
+            </div>
+          </div>
+          <div class="accordion-content">${playersContent}</div>
+        </div>
+
+        <div class="accordion open" id="acc-matchups">
+          <div class="accordion-header" onclick="toggleAccordion('acc-matchups')">
+            <span class="accordion-title">Matchup Assignments</span>
+            <div>
+              <button class="btn-ghost" onclick="event.stopPropagation(); goToStep(2)" style="margin-right:8px;font-size:13px">Edit</button>
+              <span class="accordion-chevron">&#9662;</span>
+            </div>
+          </div>
+          <div class="accordion-content">${matchupsContent}</div>
+        </div>
+
+        <div class="accordion open" id="acc-situations">
+          <div class="accordion-header" onclick="toggleAccordion('acc-situations')">
+            <span class="accordion-title">Situation Rules</span>
+            <div>
+              <button class="btn-ghost" onclick="event.stopPropagation(); goToStep(3)" style="margin-right:8px;font-size:13px">Edit</button>
+              <span class="accordion-chevron">&#9662;</span>
+            </div>
+          </div>
+          <div class="accordion-content">${situationsContent}</div>
+        </div>
+
+        <div class="save-bar">
+          <button class="btn-save" onclick="saveGamePlan()">Save Game Plan</button>
+        </div>
+      </div>
+    `;
   }
 
   // ===== Initialize =====
