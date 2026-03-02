@@ -41,9 +41,9 @@
   }
 
   /* ===== Scrollbar ===== */
-  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar { width: 8px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 4px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
   /* ===== Header ===== */
@@ -330,6 +330,8 @@
 
   .card:hover {
     border-color: rgba(255,255,255,0.15);
+    transform: translateY(-1px);
+    filter: brightness(1.05);
   }
 
   .card.selected {
@@ -675,7 +677,7 @@
   }
 
   .accordion.open .accordion-content {
-    max-height: 1000px;
+    max-height: 2000px;
     padding-bottom: 20px;
   }
 
@@ -906,7 +908,7 @@
     }
   }
 
-  /* ===== Responsive ===== */
+  /* ===== Responsive: Tablet ===== */
   @media (max-width: 768px) {
     .card-selector {
       grid-template-columns: 1fr;
@@ -916,16 +918,26 @@
       display: none;
     }
 
+    .progress-step-circle {
+      width: 30px;
+      height: 30px;
+      font-size: 12px;
+    }
+
+    .progress-line {
+      margin-top: 15px;
+    }
+
     .progress-bar {
       padding: 24px 20px 16px;
     }
 
     .wizard-container {
-      padding: 0 16px 40px;
+      padding: 0 20px 40px;
     }
 
     .header {
-      padding: 14px 16px;
+      padding: 16px 20px;
     }
 
     .step-title {
@@ -937,12 +949,23 @@
     }
 
     .player-row-header {
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .player-row-number,
+    .player-row-position {
+      width: 100%;
     }
 
     .matchup-row {
       flex-direction: column;
       align-items: stretch;
+    }
+
+    .matchup-vs {
+      text-align: center;
+      padding: 4px 0;
     }
 
     .load-modal {
@@ -952,8 +975,120 @@
     }
 
     .nav-buttons {
-      flex-wrap: wrap;
       gap: 10px;
+    }
+
+    .btn-next,
+    .btn-back {
+      padding: 10px 24px;
+      font-size: 13px;
+    }
+  }
+
+  /* ===== Responsive: Mobile ===== */
+  @media (max-width: 480px) {
+    .header {
+      padding: 12px 16px;
+    }
+
+    .header-title {
+      font-size: 14px;
+    }
+
+    .wizard-container {
+      padding: 0 16px 32px;
+    }
+
+    .progress-bar {
+      padding: 20px 16px 12px;
+    }
+
+    .progress-step-circle {
+      width: 26px;
+      height: 26px;
+      font-size: 11px;
+    }
+
+    .progress-line {
+      margin-top: 13px;
+      min-width: 20px;
+    }
+
+    .step-title {
+      font-size: 19px;
+    }
+
+    .step-subtitle {
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    .nav-buttons {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-buttons-right {
+      width: 100%;
+      flex-direction: column;
+    }
+
+    .btn-next,
+    .btn-back,
+    .btn-save {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+      padding: 12px 20px;
+    }
+
+    .btn-ghost {
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+
+    .card {
+      padding: 16px;
+    }
+
+    .card-title {
+      font-size: 14px;
+    }
+
+    .card-desc {
+      font-size: 12px;
+    }
+
+    .accordion-header {
+      padding: 14px 16px;
+    }
+
+    .accordion-content {
+      padding: 0 16px;
+    }
+
+    .accordion.open .accordion-content {
+      padding-bottom: 16px;
+    }
+
+    .situation-block {
+      padding: 16px;
+    }
+
+    .summary-section {
+      padding: 16px;
+    }
+
+    .field-label {
+      font-size: 12px;
+    }
+
+    .load-modal {
+      padding: 20px;
+    }
+
+    .load-modal-title {
+      font-size: 17px;
     }
   }
 </style>
