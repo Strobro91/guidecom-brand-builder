@@ -59,6 +59,67 @@
     max-width: 700px;
   }
 
+  /* ===================== HEADER ACTIONS ===================== */
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .btn-share, .btn-export {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: var(--radius-btn);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.2px;
+    transition: all 0.2s ease;
+  }
+  .btn-share {
+    background: var(--accent, #fff);
+    color: var(--bg, #0B0E14);
+    border: none;
+  }
+  .btn-share:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  .btn-export {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .btn-export:hover {
+    border-color: color-mix(in srgb, var(--text) 25%, transparent);
+    color: var(--text);
+  }
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--surface2, #1A1F2B);
+    color: var(--text, #E8EAED);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   /* ===================== PALETTE TABS ===================== */
   .palette-tabs {
     display: flex;
@@ -189,6 +250,66 @@
   }
   .control-btn:hover { border-color: color-mix(in srgb, var(--accent, #fff) 25%, transparent); color: var(--text); }
   .control-btn.active { background: color-mix(in srgb, var(--accent, #fff) 15%, transparent); border-color: color-mix(in srgb, var(--accent, #fff) 40%, transparent); color: var(--accent, #fff); }
+
+  /* ===================== LOGO UPLOAD ===================== */
+  .logo-upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-btn);
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    position: relative;
+  }
+  .logo-upload-zone:hover {
+    border-color: color-mix(in srgb, var(--accent, #fff) 40%, transparent);
+    background: color-mix(in srgb, var(--accent, #fff) 5%, transparent);
+  }
+  .logo-upload-zone.drag-over {
+    border-color: var(--accent, #fff);
+    background: color-mix(in srgb, var(--accent, #fff) 10%, transparent);
+  }
+  .logo-upload-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .logo-upload-hint strong {
+    color: var(--text-dim);
+  }
+  .logo-upload-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .logo-preview-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-preview-thumb {
+    max-width: 80px;
+    max-height: 40px;
+    border-radius: 4px;
+    object-fit: contain;
+  }
+  .logo-remove-btn {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-btn);
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .logo-remove-btn:hover {
+    border-color: #e74c3c;
+    color: #e74c3c;
+  }
 
   /* ===================== PREVIEW GRID ===================== */
   .preview-grid {
@@ -543,7 +664,13 @@
   <div class="header-eyebrow">Guidecom</div>
   <h2>Brand Builder</h2>
   <p>Pick a color direction, then mix and match typography, artwork, and motion until it feels right. Everything updates live.</p>
+  <div class="header-actions">
+    <button class="btn-share" onclick="shareLink()">Share Brand Guide</button>
+    <button class="btn-export" onclick="exportBrandGuide()">Export as PDF</button>
+  </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <div class="palette-tabs" id="paletteTabs"></div>
 
@@ -788,6 +915,7 @@ let state = {
   spacing: 1,   // default: Default
   icon: 0,      // default: Outlined
   button: 0,    // default: Filled
+  logo: null,   // base64 logo image or null
 };
 
 // ============================================================
@@ -879,6 +1007,27 @@ function renderIcon(size, accent, bgColor, fontFamily) {
       <svg width="${s*0.45}" height="${s*0.45}" viewBox="0 0 24 24" fill="${accent}33" stroke="${accent}" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
     </div>`;
   }
+}
+
+// ============================================================
+// LOGO RENDERING HELPERS
+// ============================================================
+function renderLogo(maxH, fallbackHtml) {
+  if (!state.logo) return fallbackHtml;
+  return `<img src="${state.logo}" style="max-height: ${maxH}px; width: auto; object-fit: contain;" alt="Logo" />`;
+}
+
+function renderLogoWithText(headingFont, textColor, accentColor, taglineColor, bodyFont) {
+  if (state.logo) {
+    return `
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <img src="${state.logo}" style="max-height: 48px; width: auto; object-fit: contain; align-self: flex-start;" alt="Logo" />
+        <div class="tagline-text" style="color: ${taglineColor}; font-family: ${bodyFont};">The guided commerce platform.</div>
+      </div>`;
+  }
+  return `
+    <div class="logo-text" style="font-family: ${headingFont}; color: ${textColor};">guide<span style="color: ${accentColor};">com</span></div>
+    <div class="tagline-text" style="color: ${taglineColor}; font-family: ${bodyFont};">The guided commerce platform.</div>`;
 }
 
 // ============================================================
@@ -1013,6 +1162,19 @@ function render() {
             <button class="control-btn" onclick="replayMotion()" style="border-color: color-mix(in srgb, var(--accent, #fff) 40%, transparent); color: var(--accent, #fff);">↻ Replay</button>
           </div>
         </div>
+        <div class="control-group">
+          <div class="control-title">Logo</div>
+          ${state.logo
+            ? `<div class="logo-preview-wrap">
+                <img src="${state.logo}" class="logo-preview-thumb" alt="Logo" />
+                <button class="logo-remove-btn" onclick="removeLogo()">Remove</button>
+              </div>`
+            : `<div class="logo-upload-zone" id="logoDropZone">
+                <input type="file" accept="image/*" class="logo-upload-input" id="logoFileInput" onchange="handleLogoUpload(event)" />
+                <div class="logo-upload-hint"><strong>Drop logo here</strong><br/>or click to upload<br/>(PNG, SVG, JPG)</div>
+              </div>`
+          }
+        </div>
       </div>
 
       <!-- PREVIEWS -->
@@ -1022,8 +1184,7 @@ function render() {
         <div class="preview-card ${motCls}" id="card-logo-dark">
           <div class="preview-label">${isL ? 'Logo on Dark' : 'Logo on Dark'}</div>
           <div class="preview-body ${artCls}" style="background: ${darkBg}; color: ${accent};">
-            <div class="logo-text" style="font-family: ${typ.heading}; color: #fff;">guide<span style="color: ${accent};">com</span></div>
-            <div class="tagline-text" style="color: rgba(255,255,255,0.4); font-family: ${typ.body};">The guided commerce platform.</div>
+            ${renderLogoWithText(typ.heading, '#fff', accent, 'rgba(255,255,255,0.4)', typ.body)}
             <div class="btn-row">
               ${renderBtn('Book a Demo →', accent, accentD, darkBgSolid, typ.body, true)}
               ${renderBtn('Learn More', accent, accentD, darkBgSolid, typ.body, false)}
@@ -1035,8 +1196,7 @@ function render() {
         <div class="preview-card ${motCls}" id="card-logo-light">
           <div class="preview-label">Logo on Light</div>
           <div class="preview-body ${artCls}" style="background: ${isL ? p.gradient : p.lightBg}; color: ${isL ? accent : accentD};">
-            <div class="logo-text" style="font-family: ${typ.heading}; color: ${lightText};">guide<span style="color: ${lightAccent};">com</span></div>
-            <div class="tagline-text" style="color: ${lightTextDim}; font-family: ${typ.body};">The guided commerce platform.</div>
+            ${renderLogoWithText(typ.heading, lightText, lightAccent, lightTextDim, typ.body)}
             <div class="btn-row">
               ${renderBtn('Book a Demo →', p.textOnLight, p.textOnLightDim, '#fff', typ.body, true)}
               ${renderBtn('Learn More', lightText, lightTextDim, lightBg, typ.body, false)}
@@ -1058,7 +1218,7 @@ function render() {
         <div class="preview-card ${motCls}" id="card-social">
           <div class="preview-label">Social Post</div>
           <div class="preview-body social-center ${artCls}" style="background: ${isL ? p.gradientSocial : p.gradientSocial}; color: ${heroAccent};">
-            ${renderIcon('44', isL ? p.textOnLight : accent, isL ? '#fff' : darkBgSolid, typ.heading)}
+            ${renderLogo(44, renderIcon('44', isL ? p.textOnLight : accent, isL ? '#fff' : darkBgSolid, typ.heading))}
             <div class="heading-text" style="color: ${heroText}; font-family: ${typ.heading};">Stop losing sales to<br/>compatibility confusion.</div>
             <div style="font-size: 12px; color: ${heroTextDim};">guidecom.io</div>
           </div>
@@ -1081,8 +1241,11 @@ function render() {
           <div class="preview-label">Email / Outreach Header</div>
           <div class="preview-body" style="background: ${darkBg}; padding: 32px 36px; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              ${renderIcon('36', accent, darkBgSolid, typ.heading)}
-              <div style="font-family: ${typ.heading}; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px;">guidecom</div>
+              ${state.logo
+                ? `<img src="${state.logo}" style="max-height: 32px; width: auto; object-fit: contain;" alt="Logo" />`
+                : `${renderIcon('36', accent, darkBgSolid, typ.heading)}
+                   <div style="font-family: ${typ.heading}; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px;">guidecom</div>`
+              }
             </div>
             <div style="font-family: ${typ.heading}; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; margin-top: 8px;">Your customers are buying blind.</div>
             <div class="body-text" style="color: rgba(255,255,255,0.55); font-family: ${typ.body}; font-size: 13px;">We help retailers guide customers through complex system purchases — so they buy right the first time. No wrong parts, no returns, no support tickets.</div>
@@ -1098,8 +1261,11 @@ function render() {
             <!-- Nav bar -->
             <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: ${Math.round(12 * sp.multiplier)}px; border-bottom: 1px solid rgba(255,255,255,0.08);">
               <div style="display: flex; align-items: center; gap: 8px;">
-                ${renderIcon('28', accent, darkBgSolid, typ.heading)}
-                <span style="font-family: ${typ.heading}; font-size: 14px; font-weight: 700; color: #fff;">guidecom</span>
+                ${state.logo
+                  ? `<img src="${state.logo}" style="max-height: 24px; width: auto; object-fit: contain;" alt="Logo" />`
+                  : `${renderIcon('28', accent, darkBgSolid, typ.heading)}
+                     <span style="font-family: ${typ.heading}; font-size: 14px; font-weight: 700; color: #fff;">guidecom</span>`
+                }
               </div>
               <div style="display: flex; gap: 16px;">
                 <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.5);">Dashboard</span>
@@ -1279,9 +1445,119 @@ function replayMotion() {
   });
 }
 
+function handleLogoUpload(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      const maxW = 200;
+      let w = img.width;
+      let h = img.height;
+      if (w > maxW) {
+        h = Math.round(h * (maxW / w));
+        w = maxW;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      state.logo = canvas.toDataURL('image/png');
+      render();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeLogo() {
+  state.logo = null;
+  render();
+}
+
+// ============================================================
+// URL STATE & SHARING
+// ============================================================
+function encodeStateToParams() {
+  const params = new URLSearchParams();
+  params.set('p', state.palette);
+  params.set('a', state.accent);
+  params.set('t', state.type);
+  params.set('ar', state.art);
+  params.set('m', state.motion);
+  params.set('r', state.radius);
+  params.set('s', state.spacing);
+  params.set('i', state.icon);
+  params.set('b', state.button);
+  if (state.logo) {
+    params.set('logo', state.logo);
+  }
+  return params.toString();
+}
+
+function decodeStateFromParams() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('p')) return; // no state in URL
+  const safeInt = (key, fallback, max) => {
+    const v = parseInt(params.get(key));
+    return (isNaN(v) || v < 0 || v >= max) ? fallback : v;
+  };
+  state.palette = safeInt('p', 0, palettes.length);
+  state.accent = safeInt('a', 0, palettes[state.palette].accentOptions.length);
+  state.type = safeInt('t', 0, typographyOptions.length);
+  state.art = safeInt('ar', 0, artworkOptions.length);
+  state.motion = safeInt('m', 0, motionOptions.length);
+  state.radius = safeInt('r', 2, radiusOptions.length);
+  state.spacing = safeInt('s', 1, spacingOptions.length);
+  state.icon = safeInt('i', 0, iconOptions.length);
+  state.button = safeInt('b', 0, buttonOptions.length);
+  if (params.get('logo')) {
+    state.logo = params.get('logo');
+  }
+}
+
+function shareLink() {
+  const params = encodeStateToParams();
+  const base = window.location.origin + window.location.pathname;
+  const url = base + '?' + params;
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('Link copied to clipboard!');
+  }).catch(() => {
+    // Fallback: select from a temporary input
+    const tmp = document.createElement('input');
+    tmp.value = url;
+    document.body.appendChild(tmp);
+    tmp.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmp);
+    showToast('Link copied to clipboard!');
+  });
+}
+
+function exportBrandGuide() {
+  const params = encodeStateToParams();
+  const base = window.location.origin + '/brand';
+  const url = base + '?' + params;
+  window.open(url, '_blank');
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
 // ============================================================
 // INIT
 // ============================================================
+decodeStateFromParams();
 renderTabs();
 render();
 </script>
