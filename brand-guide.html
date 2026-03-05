@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Guidelines — Guidecom</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Nunito+Sans:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0B0E14;
+    --surface: #12161F;
+    --surface2: #1A1F2B;
+    --border: rgba(255,255,255,0.07);
+    --text: #E8EAED;
+    --text-dim: #8B919E;
+    --text-muted: #555B69;
+    --heading: #ffffff;
+    --accent: #0ED4C5;
+    --accent-dark: #0A9E93;
+    --radius: 14px;
+    --radius-btn: 8px;
+    --radius-icon: 11px;
+    --sp: 1;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===================== GUIDE LAYOUT ===================== */
+  .guide-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px;
+  }
+
+  .guide-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    margin-bottom: 48px;
+  }
+
+  .guide-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  /* ===================== HEADER ===================== */
+  .guide-header {
+    margin-bottom: 48px;
+    text-align: left;
+  }
+  .guide-header-logo {
+    max-height: 80px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 16px;
+  }
+  .guide-header h1 {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: var(--heading);
+    margin-bottom: 12px;
+  }
+  .guide-header-bar {
+    width: 80px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--accent);
+    margin-bottom: 24px;
+  }
+  .guide-header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .guide-header-actions a,
+  .guide-header-actions button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: var(--radius-btn);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .guide-btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+  }
+  .guide-btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  .guide-btn-secondary {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .guide-btn-secondary:hover {
+    border-color: color-mix(in srgb, var(--text) 25%, transparent);
+    color: var(--text);
+  }
+
+  /* ===================== COLOR SWATCHES ===================== */
+  .guide-swatches {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+  .guide-swatch {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .guide-swatch-color {
+    height: 80px;
+  }
+  .guide-swatch-meta {
+    padding: 12px 14px;
+  }
+  .guide-swatch-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  .guide-swatch-hex {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    font-family: 'Sora', monospace;
+  }
+
+  /* ===================== TYPOGRAPHY ===================== */
+  .guide-type-block {
+    margin-bottom: 28px;
+  }
+  .guide-type-block:last-child {
+    margin-bottom: 0;
+  }
+  .guide-type-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .guide-type-sample {
+    color: var(--heading);
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+  .guide-type-spec {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* ===================== DESIGN TOKENS ===================== */
+  .guide-tokens-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .guide-token-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .guide-token-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .guide-token-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heading);
+  }
+  .guide-token-visual {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .guide-radius-box {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--accent);
+    background: transparent;
+  }
+  .guide-token-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* ===================== PREVIEW GRID ===================== */
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(20px * var(--sp, 1));
+  }
+  .preview-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .preview-label {
+    padding: 12px 18px;
+    background: var(--surface);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .preview-body {
+    padding: calc(36px * var(--sp, 1));
+    display: flex;
+    flex-direction: column;
+    gap: calc(18px * var(--sp, 1));
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Logo */
+  .logo-text {
+    font-weight: 800;
+    font-size: 30px;
+    letter-spacing: -1px;
+  }
+  .tagline-text {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; align-items: center; }
+  .pbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: var(--radius-btn);
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    width: fit-content;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+  }
+  .pbtn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 19px;
+    border-radius: var(--radius-btn);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    width: fit-content;
+    font-family: inherit;
+    background: transparent;
+    letter-spacing: 0.2px;
+  }
+
+  /* Stat */
+  .stat-num {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .body-text {
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 480px;
+  }
+  .heading-text {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+  }
+
+  /* Social icon */
+  .social-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-icon, 11px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .social-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 14px;
+    min-height: 240px;
+  }
+
+  /* Email button sizing override */
+  .email-btn-wrap .pbtn,
+  .email-btn-wrap .pbtn-outline {
+    font-size: 12px;
+    padding: 8px 18px;
+  }
+
+  /* Full width */
+  .full-width { grid-column: 1 / -1; }
+
+  /* ===================== ARTWORK OVERLAYS ===================== */
+  /* Line art */
+  .art-lines::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.07;
+    background:
+      repeating-linear-gradient(90deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 60px),
+      repeating-linear-gradient(0deg, currentColor 0px, currentColor 1px, transparent 1px, transparent 60px);
+    pointer-events: none;
+  }
+
+  /* Geometric */
+  .art-geo::before {
+    content: '';
+    position: absolute;
+    top: -20%; right: -10%;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    opacity: 0.08;
+    background: radial-gradient(circle, currentColor 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .art-geo::after {
+    content: '';
+    position: absolute;
+    bottom: -30%; left: -5%;
+    width: 200px; height: 200px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  /* Gradient mesh */
+  .art-mesh::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.12;
+    background:
+      radial-gradient(ellipse at 20% 50%, currentColor 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, currentColor 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  /* Dots */
+  .art-dots::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.06;
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+
+  /* Noise grain */
+  .art-grain::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-size: 128px;
+    pointer-events: none;
+  }
+
+  /* ===================== FOOTER ===================== */
+  .guide-footer {
+    text-align: center;
+    padding: 24px 0 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .guide-footer a {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .guide-footer a:hover {
+    text-decoration: underline;
+  }
+  .guide-footer-credit {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 1000px) {
+    .guide-wrap { padding: 32px 24px; }
+    .guide-section { padding: 28px; }
+    .preview-grid { grid-template-columns: 1fr; }
+    .full-width { grid-column: 1; }
+    .guide-swatches { grid-template-columns: repeat(3, 1fr); }
+    .guide-tokens-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .guide-wrap { padding: 20px 16px; }
+    .guide-section { padding: 20px; }
+    .guide-swatches { grid-template-columns: repeat(2, 1fr); }
+    .guide-header h1 { font-size: 30px; }
+    .guide-header-actions { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ===================== PRINT ===================== */
+  @media print {
+    .no-print { display: none !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .guide-section { break-inside: avoid; page-break-inside: avoid; }
+    .usage-examples { break-before: page; }
+    body { background: white; }
+    .guide-wrap { padding: 20px; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="guide-wrap" id="guideWrap">
+  <!-- Content rendered by JS -->
+</div>
+
+<script>
+// ============================================================
+// DATA (duplicated from builder)
+// ============================================================
+const palettes = [
+  {
+    id: 'deep-signal',
+    tab: 'A — Deep Signal',
+    name: 'Deep Signal',
+    desc: 'Dark navy + electric teal. Technical confidence with a modern edge.',
+    dark: '#0B1120',
+    surface: '#162032',
+    accent: '#0ED4C5',
+    accentDark: '#0A9E93',
+    secondary: '#3B82F6',
+    lightBg: '#F0F4F8',
+    textOnDark: '#ffffff',
+    textOnDarkDim: 'rgba(255,255,255,0.5)',
+    textOnDarkBody: 'rgba(255,255,255,0.7)',
+    textOnLight: '#0B1120',
+    textOnLightDim: '#6B7B8D',
+    gradient: 'linear-gradient(145deg, #0B1120, #0F1A30)',
+    gradientSocial: 'linear-gradient(160deg, #0B1120, #0E1B33)',
+    isLight: false,
+    pageBg: '#0B1120',
+    pageSurface: '#162032',
+    pageSurface2: '#1C2840',
+    pageBorder: 'rgba(255,255,255,0.08)',
+    pageText: '#E8EAED',
+    pageTextDim: 'rgba(255,255,255,0.5)',
+    pageTextMuted: 'rgba(255,255,255,0.25)',
+    pageHeading: '#ffffff',
+    accentOptions: [
+      { name: 'Teal', value: '#0ED4C5', dark: '#0A9E93' },
+      { name: 'Cyan', value: '#06B6D4', dark: '#0891B2' },
+      { name: 'Mint', value: '#34D399', dark: '#059669' },
+      { name: 'Sky', value: '#38BDF8', dark: '#0284C7' },
+    ],
+    swatches: [
+      { label: 'Primary Dark', color: '#0B1120' },
+      { label: 'Surface', color: '#162032' },
+      { label: 'Accent', color: '#0ED4C5', isAccent: true },
+      { label: 'Secondary', color: '#3B82F6' },
+      { label: 'Light BG', color: '#F0F4F8' },
+      { label: 'White', color: '#FFFFFF', border: true },
+    ]
+  },
+  {
+    id: 'clean-voltage',
+    tab: 'B — Clean Voltage',
+    name: 'Clean Voltage',
+    desc: 'Near-black + vivid blue. Sharp, bold, high contrast.',
+    dark: '#09090F',
+    surface: '#141420',
+    accent: '#4D7CFF',
+    accentDark: '#3A5FCC',
+    secondary: '#A78BFA',
+    lightBg: '#F5F6FA',
+    textOnDark: '#ffffff',
+    textOnDarkDim: 'rgba(255,255,255,0.45)',
+    textOnDarkBody: 'rgba(255,255,255,0.65)',
+    textOnLight: '#09090F',
+    textOnLightDim: '#7A7F8E',
+    gradient: 'linear-gradient(145deg, #09090F, #10102A)',
+    gradientSocial: 'linear-gradient(160deg, #09090F, #12123A)',
+    isLight: false,
+    pageBg: '#09090F',
+    pageSurface: '#141420',
+    pageSurface2: '#1E1E32',
+    pageBorder: 'rgba(255,255,255,0.08)',
+    pageText: '#E8EAED',
+    pageTextDim: 'rgba(255,255,255,0.45)',
+    pageTextMuted: 'rgba(255,255,255,0.22)',
+    pageHeading: '#ffffff',
+    accentOptions: [
+      { name: 'Blue', value: '#4D7CFF', dark: '#3A5FCC' },
+      { name: 'Indigo', value: '#6366F1', dark: '#4F46E5' },
+      { name: 'Violet', value: '#8B5CF6', dark: '#7C3AED' },
+      { name: 'Cobalt', value: '#2563EB', dark: '#1D4ED8' },
+    ],
+    swatches: [
+      { label: 'Primary Dark', color: '#09090F' },
+      { label: 'Surface', color: '#141420' },
+      { label: 'Accent', color: '#4D7CFF', isAccent: true },
+      { label: 'Secondary', color: '#A78BFA' },
+      { label: 'Light BG', color: '#F5F6FA' },
+      { label: 'White', color: '#FFFFFF', border: true },
+    ]
+  },
+  {
+    id: 'warm-circuit',
+    tab: 'C — Warm Circuit',
+    name: 'Warm Circuit',
+    desc: 'Deep charcoal + warm amber. Approachable and confident.',
+    dark: '#0E1117',
+    surface: '#181D26',
+    accent: '#F5A623',
+    accentDark: '#D48B0F',
+    secondary: '#4A9EE5',
+    lightBg: '#F8F6F3',
+    textOnDark: '#ffffff',
+    textOnDarkDim: 'rgba(255,255,255,0.45)',
+    textOnDarkBody: 'rgba(255,255,255,0.65)',
+    textOnLight: '#0E1117',
+    textOnLightDim: '#7A7468',
+    gradient: 'linear-gradient(145deg, #0E1117, #141A22)',
+    gradientSocial: 'linear-gradient(160deg, #0E1117, #161C25)',
+    isLight: false,
+    pageBg: '#0E1117',
+    pageSurface: '#181D26',
+    pageSurface2: '#222833',
+    pageBorder: 'rgba(255,255,255,0.08)',
+    pageText: '#E8EAED',
+    pageTextDim: 'rgba(255,255,255,0.45)',
+    pageTextMuted: 'rgba(255,255,255,0.22)',
+    pageHeading: '#ffffff',
+    accentOptions: [
+      { name: 'Amber', value: '#F5A623', dark: '#D48B0F' },
+      { name: 'Gold', value: '#EAB308', dark: '#CA8A04' },
+      { name: 'Coral', value: '#F97316', dark: '#EA580C' },
+      { name: 'Peach', value: '#FB923C', dark: '#E67E22' },
+    ],
+    swatches: [
+      { label: 'Primary Dark', color: '#0E1117' },
+      { label: 'Surface', color: '#181D26' },
+      { label: 'Accent', color: '#F5A623', isAccent: true },
+      { label: 'Secondary', color: '#4A9EE5' },
+      { label: 'Light BG', color: '#F8F6F3' },
+      { label: 'White', color: '#FFFFFF', border: true },
+    ]
+  },
+  {
+    id: 'open-air',
+    tab: 'D — Open Air',
+    name: 'Open Air',
+    desc: 'Light gradient base + slate navy text + cool steel-blue accent. Airy and trusted.',
+    dark: '#0F1C2E',
+    surface: '#F4F7FA',
+    accent: '#5B9BD5',
+    accentDark: '#3A7BBF',
+    secondary: '#1B2A3D',
+    lightBg: '#DFE6EE',
+    textOnDark: '#ffffff',
+    textOnDarkDim: 'rgba(255,255,255,0.45)',
+    textOnDarkBody: 'rgba(255,255,255,0.65)',
+    textOnLight: '#1B2A3D',
+    textOnLightDim: '#5A6A7D',
+    gradient: 'linear-gradient(145deg, #DFE6EE, #C8D4E0)',
+    gradientSocial: 'linear-gradient(160deg, #DFE6EE, #C5D1DE)',
+    gradientDark: 'linear-gradient(145deg, #0F1C2E, #162842)',
+    isLight: true,
+    pageBg: '#EDF1F5',
+    pageSurface: '#FFFFFF',
+    pageSurface2: '#F4F7FA',
+    pageBorder: 'rgba(27,42,61,0.12)',
+    pageText: '#1B2A3D',
+    pageTextDim: '#5A6A7D',
+    pageTextMuted: '#8A97A8',
+    pageHeading: '#1B2A3D',
+    accentOptions: [
+      { name: 'Steel', value: '#5B9BD5', dark: '#3A7BBF' },
+      { name: 'Slate', value: '#6B8DB5', dark: '#4A6E94' },
+      { name: 'Denim', value: '#4A80C4', dark: '#3668A8' },
+      { name: 'Ice', value: '#7CB3D9', dark: '#5A94BE' },
+    ],
+    swatches: [
+      { label: 'Primary BG', color: '#DFE6EE', gradient: 'linear-gradient(135deg, #DFE6EE, #C8D4E0)' },
+      { label: 'Surface', color: '#F4F7FA' },
+      { label: 'Primary Text', color: '#1B2A3D' },
+      { label: 'Accent', color: '#5B9BD5', isAccent: true },
+      { label: 'Dark Mode', color: '#0F1C2E' },
+      { label: 'White', color: '#FFFFFF', border: true },
+    ]
+  }
+];
+
+const typographyOptions = [
+  { name: 'Sora + Outfit', heading: "'Sora', sans-serif", body: "'Outfit', sans-serif", headingName: 'Sora', bodyName: 'Outfit' },
+  { name: 'Jakarta + Manrope', heading: "'Plus Jakarta Sans', sans-serif", body: "'Manrope', sans-serif", headingName: 'Plus Jakarta Sans', bodyName: 'Manrope' },
+  { name: 'Outfit', heading: "'Outfit', sans-serif", body: "'Outfit', sans-serif", headingName: 'Outfit', bodyName: 'Outfit' },
+  { name: 'Manrope', heading: "'Manrope', sans-serif", body: "'Manrope', sans-serif", headingName: 'Manrope', bodyName: 'Manrope' },
+  { name: 'Space Grotesk + DM Sans', heading: "'Space Grotesk', sans-serif", body: "'DM Sans', sans-serif", headingName: 'Space Grotesk', bodyName: 'DM Sans' },
+];
+
+const artworkOptions = [
+  { name: 'None', cls: '' },
+  { name: 'Line Grid', cls: 'art-lines' },
+  { name: 'Geometric', cls: 'art-geo' },
+  { name: 'Gradient Mesh', cls: 'art-mesh' },
+  { name: 'Dot Pattern', cls: 'art-dots' },
+  { name: 'Grain', cls: 'art-grain' },
+];
+
+const motionOptions = [
+  { name: 'Fade Up', cls: 'motion-fade' },
+  { name: 'Scale In', cls: 'motion-scale' },
+  { name: 'Slide Right', cls: 'motion-slide' },
+  { name: 'None', cls: 'motion-none' },
+];
+
+const radiusOptions = [
+  { name: 'Sharp', card: '0px', btn: '0px', icon: '0px' },
+  { name: 'Subtle', card: '6px', btn: '4px', icon: '6px' },
+  { name: 'Rounded', card: '14px', btn: '8px', icon: '11px' },
+  { name: 'Pill', card: '24px', btn: '100px', icon: '50%' },
+];
+
+const spacingOptions = [
+  { name: 'Compact', multiplier: 0.75 },
+  { name: 'Default', multiplier: 1.0 },
+  { name: 'Spacious', multiplier: 1.3 },
+];
+
+const iconOptions = [
+  { name: 'Outlined', style: 'outlined' },
+  { name: 'Solid', style: 'solid' },
+  { name: 'Duotone', style: 'duotone' },
+];
+
+const buttonOptions = [
+  { name: 'Filled', style: 'filled' },
+  { name: 'Outlined', style: 'outlined' },
+  { name: 'Ghost', style: 'ghost' },
+  { name: 'Gradient', style: 'gradient' },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  palette: 0,
+  accent: 0,
+  type: 0,
+  art: 0,
+  motion: 0,
+  radius: 2,
+  spacing: 1,
+  icon: 0,
+  button: 0,
+  logo: null,
+};
+
+// ============================================================
+// DECODE STATE FROM URL
+// ============================================================
+function decodeStateFromParams() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('p')) return;
+  const safeInt = (key, fallback, max) => {
+    const v = parseInt(params.get(key));
+    return (isNaN(v) || v < 0 || v >= max) ? fallback : v;
+  };
+  state.palette = safeInt('p', 0, palettes.length);
+  state.accent = safeInt('a', 0, palettes[state.palette].accentOptions.length);
+  state.type = safeInt('t', 0, typographyOptions.length);
+  state.art = safeInt('ar', 0, artworkOptions.length);
+  state.motion = safeInt('m', 0, motionOptions.length);
+  state.radius = safeInt('r', 2, radiusOptions.length);
+  state.spacing = safeInt('s', 1, spacingOptions.length);
+  state.icon = safeInt('i', 0, iconOptions.length);
+  state.button = safeInt('b', 0, buttonOptions.length);
+  if (params.get('logo')) {
+    state.logo = params.get('logo');
+  }
+}
+
+// ============================================================
+// ENCODE STATE TO PARAMS (for Edit in Builder link)
+// ============================================================
+function encodeStateToParams() {
+  const params = new URLSearchParams();
+  params.set('p', state.palette);
+  params.set('a', state.accent);
+  params.set('t', state.type);
+  params.set('ar', state.art);
+  params.set('m', state.motion);
+  params.set('r', state.radius);
+  params.set('s', state.spacing);
+  params.set('i', state.icon);
+  params.set('b', state.button);
+  if (state.logo) {
+    params.set('logo', state.logo);
+  }
+  return params.toString();
+}
+
+// ============================================================
+// THEME
+// ============================================================
+function applyTheme() {
+  const p = palettes[state.palette];
+  const accentObj = p.accentOptions[state.accent] || p.accentOptions[0];
+  const root = document.documentElement;
+
+  root.style.setProperty('--bg', p.pageBg);
+  root.style.setProperty('--surface', p.pageSurface);
+  root.style.setProperty('--surface2', p.pageSurface2);
+  root.style.setProperty('--border', p.pageBorder);
+  root.style.setProperty('--text', p.pageText);
+  root.style.setProperty('--text-dim', p.pageTextDim);
+  root.style.setProperty('--text-muted', p.pageTextMuted);
+  root.style.setProperty('--heading', p.pageHeading);
+  root.style.setProperty('--accent', accentObj.value);
+  root.style.setProperty('--accent-dark', accentObj.dark);
+
+  const rad = radiusOptions[state.radius];
+  const sp = spacingOptions[state.spacing];
+  root.style.setProperty('--radius', rad.card);
+  root.style.setProperty('--radius-btn', rad.btn);
+  root.style.setProperty('--radius-icon', rad.icon);
+  root.style.setProperty('--sp', sp.multiplier);
+}
+
+// ============================================================
+// BUTTON STYLE RENDERING HELPER
+// ============================================================
+function renderBtn(text, accent, accentDark, darkBg, fontFamily, isPrimary) {
+  const bs = buttonOptions[state.button].style;
+  const rad = radiusOptions[state.radius].btn;
+  let style = `font-family: ${fontFamily}; border-radius: ${rad};`;
+
+  if (isPrimary) {
+    switch (bs) {
+      case 'filled':
+        style += `background: ${accent}; color: ${darkBg}; border: none;`;
+        break;
+      case 'outlined':
+        style += `background: transparent; color: ${accent}; border: 2px solid ${accent};`;
+        break;
+      case 'ghost':
+        style += `background: transparent; color: ${accent}; border: none; text-decoration: underline; text-underline-offset: 3px;`;
+        break;
+      case 'gradient':
+        style += `background: linear-gradient(135deg, ${accent}, ${accentDark}); color: ${darkBg}; border: none;`;
+        break;
+    }
+    return `<div class="pbtn" style="${style}">${text}</div>`;
+  } else {
+    switch (bs) {
+      case 'filled':
+        style += `background: transparent; border: 1.5px solid ${accent}44; color: ${accent};`;
+        break;
+      case 'outlined':
+        style += `background: transparent; border: 1.5px solid ${accent}; color: ${accent};`;
+        break;
+      case 'ghost':
+        style += `background: transparent; border: none; color: ${accent}; opacity: 0.7;`;
+        break;
+      case 'gradient':
+        style += `background: transparent; border: 1.5px solid ${accent}44; color: ${accent};`;
+        break;
+    }
+    return `<div class="pbtn-outline" style="${style}">${text}</div>`;
+  }
+}
+
+// ============================================================
+// ICON STYLE RENDERING HELPER
+// ============================================================
+function renderIcon(size, accent, bgColor, fontFamily) {
+  const iconStyle = iconOptions[state.icon].style;
+  const rad = radiusOptions[state.radius].icon;
+  const s = parseInt(size);
+
+  if (iconStyle === 'outlined') {
+    return `<div style="width: ${s}px; height: ${s}px; border-radius: ${rad}; border: 2px solid ${accent}; display: flex; align-items: center; justify-content: center;">
+      <svg width="${s*0.45}" height="${s*0.45}" viewBox="0 0 24 24" fill="none" stroke="${accent}" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+    </div>`;
+  } else if (iconStyle === 'solid') {
+    return `<div style="width: ${s}px; height: ${s}px; border-radius: ${rad}; background: ${accent}; color: ${bgColor}; display: flex; align-items: center; justify-content: center; font-family: ${fontFamily}; font-size: ${s*0.5}px; font-weight: 800;">G</div>`;
+  } else {
+    return `<div style="width: ${s}px; height: ${s}px; border-radius: ${rad}; background: ${accent}22; display: flex; align-items: center; justify-content: center;">
+      <svg width="${s*0.45}" height="${s*0.45}" viewBox="0 0 24 24" fill="${accent}33" stroke="${accent}" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+    </div>`;
+  }
+}
+
+// ============================================================
+// LOGO RENDERING HELPERS
+// ============================================================
+function renderLogo(maxH, fallbackHtml) {
+  if (!state.logo) return fallbackHtml;
+  return `<img src="${state.logo}" style="max-height: ${maxH}px; width: auto; object-fit: contain;" alt="Logo" />`;
+}
+
+function renderLogoWithText(headingFont, textColor, accentColor, taglineColor, bodyFont) {
+  if (state.logo) {
+    return `
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <img src="${state.logo}" style="max-height: 48px; width: auto; object-fit: contain; align-self: flex-start;" alt="Logo" />
+        <div class="tagline-text" style="color: ${taglineColor}; font-family: ${bodyFont};">The guided commerce platform.</div>
+      </div>`;
+  }
+  return `
+    <div class="logo-text" style="font-family: ${headingFont}; color: ${textColor};">guide<span style="color: ${accentColor};">com</span></div>
+    <div class="tagline-text" style="color: ${taglineColor}; font-family: ${bodyFont};">The guided commerce platform.</div>`;
+}
+
+// ============================================================
+// RENDER BRAND GUIDE
+// ============================================================
+function render() {
+  applyTheme();
+
+  const p = palettes[state.palette];
+  const accentObj = p.accentOptions[state.accent] || p.accentOptions[0];
+  const accent = accentObj.value;
+  const accentD = accentObj.dark;
+  const typ = typographyOptions[state.type];
+  const art = artworkOptions[state.art];
+  const rad = radiusOptions[state.radius];
+  const sp = spacingOptions[state.spacing];
+
+  const isL = p.isLight;
+  const heroBg = p.gradient;
+  const heroText = isL ? p.textOnLight : p.textOnDark;
+  const heroTextDim = isL ? p.textOnLightDim : p.textOnDarkDim;
+  const heroTextBody = isL ? p.textOnLightDim : p.textOnDarkBody;
+  const heroAccent = accent;
+
+  const lightBg = isL ? '#FFFFFF' : p.lightBg;
+  const lightText = isL ? p.textOnLight : p.textOnLight;
+  const lightTextDim = isL ? p.textOnLightDim : p.textOnLightDim;
+  const lightAccent = accentD;
+
+  const darkBg = isL ? (p.gradientDark || p.dark) : p.gradient;
+  const darkBgSolid = p.dark;
+
+  const artCls = art.cls;
+
+  const builderUrl = '/' + '?' + encodeStateToParams();
+
+  // ---- Build HTML ----
+  let html = '';
+
+  // == 1. HEADER ==
+  html += `
+    <div class="guide-header">
+      ${state.logo ? `<img src="${state.logo}" class="guide-header-logo" alt="Logo" />` : ''}
+      <h1 style="font-family: ${typ.heading};">Brand Guidelines</h1>
+      <div class="guide-header-bar"></div>
+      <div class="guide-header-actions no-print">
+        <a href="${builderUrl}" class="guide-btn-secondary">Edit in Builder</a>
+        <button class="guide-btn-primary" onclick="window.print()">Download PDF</button>
+      </div>
+    </div>
+  `;
+
+  // == 2. COLOR PALETTE ==
+  let swatchesHtml = '';
+  p.swatches.forEach(s => {
+    const col = s.isAccent ? accent : s.color;
+    const bg = s.gradient || col;
+    const borderStyle = s.border ? 'border-bottom: 1px solid rgba(200,200,200,0.2);' : '';
+    swatchesHtml += `
+      <div class="guide-swatch">
+        <div class="guide-swatch-color" style="background: ${bg}; ${borderStyle}"></div>
+        <div class="guide-swatch-meta">
+          <div class="guide-swatch-label">${s.label}</div>
+          <div class="guide-swatch-hex">${s.isAccent ? accent : s.color}</div>
+        </div>
+      </div>`;
+  });
+
+  html += `
+    <div class="guide-section">
+      <div class="guide-section-title">Color Palette</div>
+      <div class="guide-swatches">${swatchesHtml}</div>
+    </div>
+  `;
+
+  // == 3. TYPOGRAPHY ==
+  html += `
+    <div class="guide-section">
+      <div class="guide-section-title">Typography</div>
+      <div class="guide-type-block">
+        <div class="guide-type-label">Heading Font &mdash; ${typ.headingName}</div>
+        <div class="guide-type-sample" style="font-family: ${typ.heading}; font-size: 32px; font-weight: 800;">The quick brown fox jumps over the lazy dog</div>
+        <div class="guide-type-spec">Weight: 800 (Extra Bold) &middot; Size: 32&ndash;44px &middot; Letter-spacing: -1.5px</div>
+      </div>
+      <div class="guide-type-block">
+        <div class="guide-type-label">Body Font &mdash; ${typ.bodyName}</div>
+        <div class="guide-type-sample" style="font-family: ${typ.body}; font-size: 15px; font-weight: 400; color: var(--text-dim); line-height: 1.7;">Guidecom helps retailers sell multi-component product systems by guiding customers through every compatible option. No wrong parts. No abandoned carts. No returns.</div>
+        <div class="guide-type-spec">Weight: 400 (Regular) &middot; Size: 14&ndash;16px &middot; Line-height: 1.7</div>
+      </div>
+    </div>
+  `;
+
+  // == 4. DESIGN TOKENS ==
+  html += `
+    <div class="guide-section">
+      <div class="guide-section-title">Design Tokens</div>
+      <div class="guide-tokens-grid">
+        <div class="guide-token-item">
+          <div class="guide-token-label">Border Radius</div>
+          <div class="guide-token-visual">
+            <div class="guide-radius-box" style="border-radius: ${rad.card};"></div>
+            <div class="guide-token-value">${rad.name} &mdash; ${rad.card}</div>
+          </div>
+        </div>
+        <div class="guide-token-item">
+          <div class="guide-token-label">Spacing</div>
+          <div class="guide-token-value">${sp.name} (${sp.multiplier}x multiplier)</div>
+        </div>
+        <div class="guide-token-item">
+          <div class="guide-token-label">Icon Style</div>
+          <div class="guide-token-visual">
+            ${renderIcon('40', accent, darkBgSolid, typ.heading)}
+            <div class="guide-token-value">${iconOptions[state.icon].name}</div>
+          </div>
+        </div>
+        <div class="guide-token-item">
+          <div class="guide-token-label">Button Style</div>
+          <div class="guide-token-buttons">
+            ${renderBtn('Primary', accent, accentD, darkBgSolid, typ.body, true)}
+            ${renderBtn('Secondary', accent, accentD, darkBgSolid, typ.body, false)}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // == 5. USAGE EXAMPLES ==
+  html += `
+    <div class="guide-section usage-examples">
+      <div class="guide-section-title">Usage Examples</div>
+      <div class="preview-grid">
+
+        <!-- 1. Logo on dark -->
+        <div class="preview-card">
+          <div class="preview-label">Logo on Dark</div>
+          <div class="preview-body ${artCls}" style="background: ${darkBg}; color: ${accent};">
+            ${renderLogoWithText(typ.heading, '#fff', accent, 'rgba(255,255,255,0.4)', typ.body)}
+            <div class="btn-row">
+              ${renderBtn('Book a Demo \u2192', accent, accentD, darkBgSolid, typ.body, true)}
+              ${renderBtn('Learn More', accent, accentD, darkBgSolid, typ.body, false)}
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Logo on light -->
+        <div class="preview-card">
+          <div class="preview-label">Logo on Light</div>
+          <div class="preview-body ${artCls}" style="background: ${isL ? p.gradient : p.lightBg}; color: ${isL ? accent : accentD};">
+            ${renderLogoWithText(typ.heading, lightText, lightAccent, lightTextDim, typ.body)}
+            <div class="btn-row">
+              ${renderBtn('Book a Demo \u2192', p.textOnLight, p.textOnLightDim, '#fff', typ.body, true)}
+              ${renderBtn('Learn More', lightText, lightTextDim, lightBg, typ.body, false)}
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Pitch deck stat -->
+        <div class="preview-card">
+          <div class="preview-label">Pitch Deck Slide</div>
+          <div class="preview-body ${artCls}" style="background: ${heroBg}; color: ${heroAccent};">
+            <div class="stat-num" style="color: ${heroAccent}; font-family: ${typ.heading};">73%</div>
+            <div class="stat-label" style="color: ${heroTextDim};">of system purchases are abandoned due to compatibility confusion</div>
+            <div class="body-text" style="color: ${heroTextBody}; font-family: ${typ.body};">Guidecom eliminates this by guiding customers through every compatible option \u2014 from first click to checkout.</div>
+          </div>
+        </div>
+
+        <!-- 4. Social post -->
+        <div class="preview-card">
+          <div class="preview-label">Social Post</div>
+          <div class="preview-body social-center ${artCls}" style="background: ${isL ? p.gradientSocial : p.gradientSocial}; color: ${heroAccent};">
+            ${renderLogo(44, renderIcon('44', isL ? p.textOnLight : accent, isL ? '#fff' : darkBgSolid, typ.heading))}
+            <div class="heading-text" style="color: ${heroText}; font-family: ${typ.heading};">Stop losing sales to<br/>compatibility confusion.</div>
+            <div style="font-size: 12px; color: ${heroTextDim};">guidecom.io</div>
+          </div>
+        </div>
+
+        <!-- 5. Website section (white) -->
+        <div class="preview-card">
+          <div class="preview-label">Website Section</div>
+          <div class="preview-body ${artCls}" style="background: #FFFFFF; color: ${accentD};">
+            <div class="heading-text" style="color: ${p.isLight ? p.textOnLight : p.textOnLight}; font-family: ${typ.heading};">Built for system-level purchases</div>
+            <div class="body-text" style="color: #5A6A7D; font-family: ${typ.body};">When customers buy multi-component systems, they need more than a product page. Guidecom walks them through every compatible option so they buy right the first time.</div>
+            <div class="btn-row">
+              ${renderBtn('See It In Action \u2192', darkBgSolid, p.dark, '#fff', typ.body, true)}
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Email header -->
+        <div class="preview-card">
+          <div class="preview-label">Email / Outreach Header</div>
+          <div class="preview-body" style="background: ${darkBg}; padding: 32px 36px; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              ${state.logo
+                ? `<img src="${state.logo}" style="max-height: 32px; width: auto; object-fit: contain;" alt="Logo" />`
+                : `${renderIcon('36', accent, darkBgSolid, typ.heading)}
+                   <div style="font-family: ${typ.heading}; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px;">guidecom</div>`
+              }
+            </div>
+            <div style="font-family: ${typ.heading}; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; margin-top: 8px;">Your customers are buying blind.</div>
+            <div class="body-text" style="color: rgba(255,255,255,0.55); font-family: ${typ.body}; font-size: 13px;">We help retailers guide customers through complex system purchases \u2014 so they buy right the first time. No wrong parts, no returns, no support tickets.</div>
+            <div class="email-btn-wrap" style="margin-top: 4px;">${renderBtn('See How It Works \u2192', accent, accentD, darkBgSolid, typ.body, true)}</div>
+          </div>
+        </div>
+
+        <!-- 7. Dashboard / Data UI -->
+        <div class="preview-card full-width">
+          <div class="preview-label">Dashboard / Data UI</div>
+          <div class="preview-body" style="background: ${darkBg}; padding: ${Math.round(28 * sp.multiplier)}px; gap: ${Math.round(16 * sp.multiplier)}px;">
+
+            <!-- Nav bar -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: ${Math.round(12 * sp.multiplier)}px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                ${state.logo
+                  ? `<img src="${state.logo}" style="max-height: 24px; width: auto; object-fit: contain;" alt="Logo" />`
+                  : `${renderIcon('28', accent, darkBgSolid, typ.heading)}
+                     <span style="font-family: ${typ.heading}; font-size: 14px; font-weight: 700; color: #fff;">guidecom</span>`
+                }
+              </div>
+              <div style="display: flex; gap: 16px;">
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.5);">Dashboard</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">Products</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">Analytics</span>
+              </div>
+            </div>
+
+            <!-- KPI row -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: ${Math.round(12 * sp.multiplier)}px;">
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: ${rad.card}; padding: ${Math.round(16 * sp.multiplier)}px;">
+                <div style="font-family: ${typ.body}; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px;">Sessions</div>
+                <div style="font-family: ${typ.heading}; font-size: 28px; font-weight: 800; color: ${accent}; letter-spacing: -1px;">1,247</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: ${rad.card}; padding: ${Math.round(16 * sp.multiplier)}px;">
+                <div style="font-family: ${typ.body}; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px;">Match Rate</div>
+                <div style="font-family: ${typ.heading}; font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px;">89%</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: ${rad.card}; padding: ${Math.round(16 * sp.multiplier)}px;">
+                <div style="font-family: ${typ.body}; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px;">Returns</div>
+                <div style="font-family: ${typ.heading}; font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px;">\u2193 12%</div>
+              </div>
+            </div>
+
+            <!-- Mini bar chart -->
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="font-family: ${typ.body}; font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35);">Guided Completions</div>
+              <div style="display: flex; align-items: flex-end; gap: 6px; height: 60px;">
+                <div style="flex: 1; background: ${accent}33; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 40%;"></div>
+                <div style="flex: 1; background: ${accent}55; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 55%;"></div>
+                <div style="flex: 1; background: ${accent}77; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 45%;"></div>
+                <div style="flex: 1; background: ${accent}99; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 70%;"></div>
+                <div style="flex: 1; background: ${accent}bb; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 60%;"></div>
+                <div style="flex: 1; background: ${accent}; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 90%;"></div>
+                <div style="flex: 1; background: ${accent}dd; border-radius: ${rad.btn} ${rad.btn} 0 0; height: 85%;"></div>
+              </div>
+            </div>
+
+            <!-- Table rows hint -->
+            <div style="display: flex; flex-direction: column; gap: 0;">
+              <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 12px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${accent};"></div>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.6); flex: 1;">HVAC Pro System 3000</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">94% match</span>
+              </div>
+              <div style="display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 12px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${accent}88;"></div>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.6); flex: 1;">Solar Panel Kit \u2014 Residential</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">87% match</span>
+              </div>
+              <div style="display: flex; align-items: center; padding: 10px 0; gap: 12px;">
+                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${accent}55;"></div>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.6); flex: 1;">Pool Filtration Bundle</span>
+                <span style="font-family: ${typ.body}; font-size: 12px; color: rgba(255,255,255,0.3);">81% match</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  // == 6. FOOTER ==
+  html += `
+    <div class="guide-footer">
+      <a href="${builderUrl}" class="no-print">Edit in Builder \u2192</a>
+      <div class="guide-footer-credit">Built with Guidecom Brand Builder</div>
+    </div>
+  `;
+
+  document.getElementById('guideWrap').innerHTML = html;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+decodeStateFromParams();
+render();
+</script>
+
+</body>
+</html>
