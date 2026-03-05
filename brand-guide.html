@@ -858,14 +858,14 @@ function renderIcon(size, accent, bgColor, fontFamily) {
 // ============================================================
 function renderLogo(maxH, fallbackHtml) {
   if (!state.logo) return fallbackHtml;
-  return `<img src="${state.logo}" style="max-height: ${maxH}px; width: auto; object-fit: contain;" alt="Logo" />`;
+  return `<img src="${state.logo}" style="max-height: ${maxH}px; max-width: 120px; width: auto; object-fit: contain;" alt="Logo" />`;
 }
 
 function renderLogoWithText(headingFont, textColor, accentColor, taglineColor, bodyFont) {
   if (state.logo) {
     return `
       <div style="display: flex; flex-direction: column; gap: 8px;">
-        <img src="${state.logo}" style="max-height: 48px; width: auto; object-fit: contain; align-self: flex-start;" alt="Logo" />
+        <img src="${state.logo}" style="max-height: 48px; max-width: 120px; width: auto; object-fit: contain; align-self: flex-start;" alt="Logo" />
         <div class="tagline-text" style="color: ${taglineColor}; font-family: ${bodyFont};">The guided commerce platform.</div>
       </div>`;
   }
@@ -919,7 +919,6 @@ function render() {
       <div class="guide-header-bar"></div>
       <div class="guide-header-actions no-print">
         <a href="${builderUrl}" class="guide-btn-secondary">Edit in Builder</a>
-        <button class="guide-btn-primary" onclick="window.print()">Download PDF</button>
       </div>
     </div>
   `;
@@ -1156,8 +1155,9 @@ function render() {
 
   // == 6. FOOTER ==
   html += `
-    <div class="guide-footer">
-      <a href="${builderUrl}" class="no-print">Edit in Builder \u2192</a>
+    <div class="guide-footer no-print">
+      <a href="${builderUrl}">Edit in Builder \u2192</a>
+      <button class="guide-btn-primary" onclick="window.print()">Download PDF</button>
       <div class="guide-footer-credit">Built with Guidecom Brand Builder</div>
     </div>
   `;

@@ -1014,14 +1014,14 @@ function renderIcon(size, accent, bgColor, fontFamily) {
 // ============================================================
 function renderLogo(maxH, fallbackHtml) {
   if (!state.logo) return fallbackHtml;
-  return `<img src="${state.logo}" style="max-height: ${maxH}px; width: auto; object-fit: contain;" alt="Logo" />`;
+  return `<img src="${state.logo}" style="max-height: ${maxH}px; max-width: 120px; width: auto; object-fit: contain;" alt="Logo" />`;
 }
 
 function renderLogoWithText(headingFont, textColor, accentColor, taglineColor, bodyFont) {
   if (state.logo) {
     return `
       <div style="display: flex; flex-direction: column; gap: 8px;">
-        <img src="${state.logo}" style="max-height: 48px; width: auto; object-fit: contain; align-self: flex-start;" alt="Logo" />
+        <img src="${state.logo}" style="max-height: 48px; max-width: 120px; width: auto; object-fit: contain; align-self: flex-start;" alt="Logo" />
         <div class="tagline-text" style="color: ${taglineColor}; font-family: ${bodyFont};">The guided commerce platform.</div>
       </div>`;
   }
@@ -1479,6 +1479,41 @@ function removeLogo() {
   render();
 }
 
+function initLogoDragDrop() {
+  const zone = document.querySelector('.logo-upload-zone');
+  if (!zone) return;
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('drag-over');
+  });
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('drag-over');
+  });
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    // Reuse the same resize + store logic
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = new Image();
+      img.onload = function() {
+        const maxW = 200;
+        let w = img.width, h = img.height;
+        if (w > maxW) { h = Math.round(h * (maxW / w)); w = maxW; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        state.logo = canvas.toDataURL('image/png');
+        render();
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 // ============================================================
 // URL STATE & SHARING
 // ============================================================
@@ -1522,10 +1557,9 @@ function decodeStateFromParams() {
 
 function shareLink() {
   const params = encodeStateToParams();
-  const base = window.location.origin + window.location.pathname;
-  const url = base + '?' + params;
+  const url = window.location.origin + '/brand?' + params;
   navigator.clipboard.writeText(url).then(() => {
-    showToast('Link copied to clipboard!');
+    showToast('Link copied!');
   }).catch(() => {
     // Fallback: select from a temporary input
     const tmp = document.createElement('input');
@@ -1534,7 +1568,7 @@ function shareLink() {
     tmp.select();
     document.execCommand('copy');
     document.body.removeChild(tmp);
-    showToast('Link copied to clipboard!');
+    showToast('Link copied!');
   });
 }
 
@@ -1560,6 +1594,7 @@ function showToast(msg) {
 decodeStateFromParams();
 renderTabs();
 render();
+initLogoDragDrop();
 </script>
 
 </body>
