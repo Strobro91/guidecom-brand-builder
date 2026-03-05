@@ -12,10 +12,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'guidecom-brand-builder.html'));
 });
 
-app.get('/game-plan', (req, res) => {
-  res.sendFile(path.join(__dirname, 'defensive-game-plan.html'));
-});
-
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Guidecom Brand Builder running on port ${PORT}`);
 });
